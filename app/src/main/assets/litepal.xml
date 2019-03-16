@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<litepal>
+    <dbname value="HealthCommunityStore"></dbname>
+    <version value="1"/>
+    <list>
+        <mapping class="com.example.health_community.News"/>
+        <mapping class="com.example.health_community.Medicine"/>
+    </list>
+</litepal>

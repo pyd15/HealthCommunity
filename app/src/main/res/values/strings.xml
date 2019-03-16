@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">健康社区</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="nav_header_text">点击进入登陆界面</string>
+
+    <!-- String related to Login -->
+    <string name="title_activity_login">Login</string>
+    <string name="login_user_name_hint">phone or email</string>
+    <string name="login_user_name_password">password</string>
+    <string name="action_sign_in">Login</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="register">Register</string>
+    <string name="error_invalid_name">Invalid user name</string>
+    <string name="error_invalid_password">At least 4 characters</string>
+    <string name="error_incorrect_password">Incorrect password</string>
+    <string name="error_no_name">Input your phone or email</string>
+    <string name="error_no_password">Input your password</string>
+    <string name="snackbar_forgot_password">Oh oh !</string>
+    <string name="snackbar_register">Oh oh !</string>
+
+    <!-- String related to RecyclerView -->
+    <string name="title_activity_recycler_view">RecyclerView</string>
+    <string name="tv_recycler_item_1">标题</string>
+    <string name="tv_recycler_item_2">概要</string>
+    <string name="tv_recycler_item_3">上下拖动改变条目位置</string>
+    <string name="title_activity_share_view">Share View</string>
+    <string name="share_view_press_it">你可以点按它</string>
+    <string name="no_more_data">没有更多数据了</string>
+    <string name="item_swipe_dismissed">已删除</string>
+    <string name="item_swipe_undo">撤销</string>
+
+    <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="medicines">药品信息</string>
+    <string name="health_index">健康指数</string>
+    <string name="health_profile">健康档案</string>
+    <string name="planned_immunity">计划免疫</string>
+    <string name="hospital_map">就医地图</string>
+    <string name="self_help_registration">自助挂号</string>
+    <string name="service_evaluation">服务评价</string>
+    <string name="diagnosis_records">诊疗记录</string>
+    <string name="not_for_now">暂无</string>
+
+</resources>
