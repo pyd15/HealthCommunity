@@ -1,6 +1,6 @@
 package com.example.health_community.util;
 
-import com.example.health_community.News;
+import com.example.health_community.model.News;
 
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;

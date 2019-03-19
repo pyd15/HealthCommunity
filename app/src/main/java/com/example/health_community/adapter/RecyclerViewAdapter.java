@@ -24,10 +24,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.health_community.News;
+import com.example.health_community.model.News;
 import com.example.health_community.R;
 import com.example.health_community.activity.WebNewsActivity;
-import com.example.health_community.interf.onMoveAndSwipedListener;
+import com.example.health_community.view.interf.onMoveAndSwipedListener;
 
 import java.io.IOException;
 import java.util.ArrayList;

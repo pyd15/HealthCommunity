@@ -7,20 +7,31 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
-public class HttpUtil {
+public class HttpUtil<T> {
 
     public static long start_time;
 
-    public static void sendOkHttpRequest(final String address, final okhttp3.Callback callback) {
+    public static void sendOkHttpGetRequest(final String address, final okhttp3.Callback callback) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(address)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    public static <T> void sendOkHttpPostRequest(final String address,String json,final okhttp3.Callback callback) {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody=FormBody.create(MediaType.parse("application/json; charset=utf-8"),json);
+        Request request = new Request.Builder()
+                .url(address)
+                .post(requestBody)
                 .build();
         client.newCall(request).enqueue(callback);
     }

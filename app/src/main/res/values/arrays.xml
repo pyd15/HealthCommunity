@@ -16,4 +16,68 @@
         <item>标签</item>
         <item>发现</item>
     </string-array>
+    <string-array name="hospital_big_department">
+        <item>内科</item>
+        <item>妇产科</item>
+        <item>骨科</item>
+        <item>肿瘤科</item>
+        <item>外科</item>
+        <item>辅助部门</item>
+    </string-array>
+    <string-array name="hospital_internal">
+        <item>心血管科</item>
+        <item>脾胃病科</item>
+        <item>肾病科</item>
+        <item>脑病科</item>
+        <item>呼吸科</item>
+        <item>内分泌科</item>
+        <item>血液科</item>
+        <item>风湿病科</item>
+        <item>重症病科</item>
+        <item>综合科</item>
+        <item>急诊科</item>
+    </string-array>
+    <string-array name="hospital_obstetrics_gynecology">
+        <item>一妇科</item>
+        <item>二妇科</item>
+        <item>产科</item>
+        <item>新生儿科</item>
+    </string-array>
+    <string-array name="hospital_orthopedics">
+        <item>一骨科</item>
+        <item>二骨科</item>
+        <item>三骨科</item>
+        <item>四骨科</item>
+    </string-array>
+    <string-array name="hospital_oncology">
+        <item>肿瘤一科</item>
+        <item>肿瘤二科</item>
+        <item>肿瘤三科</item>
+        <item>肿瘤四科</item>
+    </string-array>
+    <string-array name="hospital_surgery">
+        <item>一外科</item>
+        <item>二外科</item>
+        <item>三外科</item>
+        <item>四外科</item>
+        <item>肛肠科</item>
+        <item>肿瘤科</item>
+        <item>乳腺科</item>
+        <item>颅脑科</item>
+        <item>皮肤科</item>
+        <item>针灸科</item>
+        <item>推拿科</item>
+        <item>儿科</item>
+        <item>护理科</item>
+        <item>麻醉科</item>
+        <item>口腔科</item>
+        <item>耳鼻喉科</item>
+        <item>眼科</item>
+    </string-array>
+    <string-array name="hospital_subsidiary">
+        <item>影像科</item>
+        <item>检验科</item>
+        <item>消化内镜室</item>
+    </string-array>
+
 </resources>

@@ -47,12 +47,14 @@ public class Constant {
     public static final String ADMIN_ID = "adminID";
     public static final String NEW_USER = "new_user";
     public static final String OLD_USER = "old_user";
-    public static final String USER_NAME = "userName";
+    public static final String USER_NAME = "user_name";
+    public static final String USER_ACCOUNT = "user_account";
+    public static final String USER_PASSWORD = "user_pass";
+    public static final String USER_ID = "user_id";
     public static final String USER_STATUS = "userStatus";
     public static final String USER_STATUS_1 = "login";
     public static final String USER_STATUS_2 = "register";
     public static final String USER_STATUS_3 = "offline";
-    public static final String USER_ID = "userID";
 
 
     /**
@@ -117,8 +119,12 @@ public class Constant {
     public static final String _URL = "https://scau935.fashcollege.com";
     public static final String UPDATE_URL = "http://scau935.fashcollege.com/apk/";
     public static final String INFO_URL="http://scau935.fashcollege.com/getInfo.do";
+    public static final String LOGIN_URL = "http://192.168.137.1:8080/JSoupDemo/user/loginUser";
+    public static final String REGISTER_URL = "http://192.168.137.1:8080/JSoupDemo/user/registerUser";
     public static final String IDENTIFY_URL="http://40.125.207.182:8080/identify.do";
     public static final String CHECK_UPDATE_URL = "http://40.125.207.182:8080/getFileName.do";
+    public static String GET_NEWS_URL = "https://pydwp.xyz/JSoupDemo/News/getJsonNews.do?news_type=";
+    public static String SEARCH_MEDICINE_URL = "https://pydwp.xyz/JSoupDemo/medicine/getJsonMedicines.do?searchContent=";
 
     //    public static final String _URL = "http://40.125.207.182:8080";
     //    public static final String UPDATE_URL = "http://40.125.207.182:8080/apk/";

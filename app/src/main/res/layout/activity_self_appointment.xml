@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@color/colorPrimary" >
+        <!--android:background="@color/title_color"-->
+
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_imagebutton"
+            android:drawableLeft="@drawable/ic_left"
+            android:paddingLeft="10dp"
+            android:paddingRight="20dp" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/department_appoint"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:id="@+id/treeList"
+        >
+
+        <EditText
+            android:id="@+id/et_filter"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:drawableLeft="@drawable/ic_search_orange_200_24dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textColor="@color/normal_color"
+            android:textSize="14sp"
+            android:hint="请输入关键字"
+            android:drawablePadding="8dp"
+            android:background="@drawable/bg_input_filter"
+            android:maxLines="1"
+            android:visibility="visible"/>
+
+        <ListView
+            android:id="@+id/listView"
+            style="@style/listviewstyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:layout_below="@id/treeList"
+        >
+
+    <Button
+        android:id="@+id/btn_dialog_bottom_sheet_ok"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:text="@string/dialog_ok"
+        android:textColor="@color/colorAccent"
+        android:layout_alignParentRight="true"/>
+
+    <Button
+        android:id="@+id/btn_dialog_bottom_sheet_cancel"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/btn_dialog_bottom_sheet_ok"
+        android:text="@string/dialog_cancel"
+        android:textColor="@color/colorAccent"
+        android:layout_toStartOf="@+id/btn_dialog_bottom_sheet_ok"/>
+    </RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

@@ -17,7 +17,10 @@ import android.widget.Button;
 
 import com.example.health_community.R;
 import com.example.health_community.activity.BottomNavigationBarActivity;
+import com.example.health_community.activity.LoginActivity;
 import com.example.health_community.activity.PoiSearchActivity;
+import com.example.health_community.activity.SearchMedicineActivity;
+import com.example.health_community.activity.SelfAppointmentActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,7 +44,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     Button btn_planned_immunize;
     @BindView(R.id.btn_hospital_map)
     Button btn_hospital_map;
-    
+    @BindView(R.id.self_appointment)
+    Button btn_self_appointment;
+    @BindView(R.id.service_comment)
+    Button btn_service_comment;
+    @BindView(R.id.diagnose_record)
+    Button btn_diagnose_record;
 
     private View view;
     //    @BindView(R.id.view_pager_main)
@@ -49,6 +57,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     //    @BindView(R.id.tab_layout_main)
     private TabLayout tabLayout;
     BottomNavigationBarActivity bottomNavigationActivity;
+    private Intent intent;
 
     //    private List<Book> allBooks;
     //    List<Book> filteredModelList;
@@ -68,7 +77,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         //        return textView;
         ButterKnife.bind(this, view);
         btn_medicines.setOnClickListener(this);
+        btn_health_rate.setOnClickListener(this);
+        btn_health_profile.setOnClickListener(this);
+        btn_planned_immunize.setOnClickListener(this);
         btn_hospital_map.setOnClickListener(this);
+        btn_self_appointment.setOnClickListener(this);
+        btn_service_comment.setOnClickListener(this);
+        btn_diagnose_record.setOnClickListener(this);
+
         setHasOptionsMenu(true);
         //        allBooks = LitePal.findAll(Book.class);
         initView();
@@ -109,10 +125,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_medicines:
+                intent = new Intent(getActivity(), SearchMedicineActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.self_appointment:
+                intent = new Intent(getActivity(), SelfAppointmentActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.planned_immunize:
+                intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
                 break;
             case R.id.btn_hospital_map:
-                Intent intent = new Intent(getActivity(), PoiSearchActivity.class);
+                intent = new Intent(getActivity(), PoiSearchActivity.class);
                 startActivity(intent);
+                break;
         }
     }
 

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
 import com.example.health_community.R;
+import com.example.health_community.util.Constant;
 import com.example.health_community.util.HttpAction;
 
 import org.json.JSONException;
@@ -31,7 +32,7 @@ public class SplashActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
         try {
-            HttpAction.parseJSONWithJSONObject(this,"https://pydwp.xyz/JSoupDemo/News/getJsonNews.do?news_type=1");
+            HttpAction.parseJSONWithJSONObject(this, Constant.GET_NEWS_URL+"39_ys");
         } catch (JSONException e) {
             e.printStackTrace();
         }

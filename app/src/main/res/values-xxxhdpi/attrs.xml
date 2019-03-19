@@ -5,4 +5,8 @@
         <attr name="searchIconColor" format="reference|color" />
         <attr name="discoverSearchBg" format="reference|color" />
     </declare-styleable>
+
+    <declare-styleable name="TextViewBorder">
+        <attr name="borderColor" format="color"/>
+    </declare-styleable>
 </resources>

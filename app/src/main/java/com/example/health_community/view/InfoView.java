@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.example.health_community.R;
-import com.example.health_community.interf.OnTouchOutsideViewListener;
+import com.example.health_community.view.interf.OnTouchOutsideViewListener;
 
 /**
  * @说明:点击marker弹出的自定义view

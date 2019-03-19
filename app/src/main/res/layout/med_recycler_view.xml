@@ -27,10 +27,10 @@
         </android.support.v7.widget.Toolbar>
 
         <com.miguelcatalan.materialsearchview.MaterialSearchView
-            android:id="@+id/search_view"
-            style="@style/MaterialSearchViewStyle"
+            android:id="@+id/search_med_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"/>
+        <!--style="@style/MaterialSearchViewStyle"-->
     </FrameLayout>
 
     <FrameLayout
@@ -38,18 +38,37 @@
         android:layout_height="match_parent">
 
         <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipsh_refresh"
+            android:id="@+id/swipsh_med_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             >
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/med_recycler_view"
+                android:id="@+id/medicine_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/white"
                 />
         </android.support.v4.widget.SwipeRefreshLayout>
+        <com.mcxtzhang.indexlib.IndexBar.widget.IndexBar
+            android:id="@+id/indexBar"
+            android:layout_width="24dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            app:indexBarPressBackground="@color/partTranslucent"
+            app:indexBarTextSize="16sp"/>
 
+        <TextView
+            android:id="@+id/tvSideBarHint"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:background="@drawable/shape_side_bar_bg"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="48sp"
+            android:visibility="gone"
+            tools:text="A"
+            tools:visibility="visible"/>
     </FrameLayout>
 </LinearLayout>

@@ -5,7 +5,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
-import com.example.health_community.interf.onMoveAndSwipedListener;
+import com.example.health_community.view.interf.onMoveAndSwipedListener;
 
 /**
  * Created by zhang on 2016.08.21.

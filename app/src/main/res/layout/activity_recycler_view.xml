@@ -15,7 +15,7 @@
         <!--android:theme="@style/AppTheme.AppBarOverlay">-->
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_med_recycler_view"
+            android:id="@+id/toolbar_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/toolbar"
@@ -32,7 +32,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_add_white_24dp"
         app:layout_behavior="com.example.databaseproject.FabBehavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

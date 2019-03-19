@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.Random;
 
 /**
  * Created by Dr.P on 2018/5/8.
@@ -166,5 +167,16 @@ public class NormalUtil {
         }
 //        Log.e("????????????", getVersionName(context));
         return "btfrg_V"+versionName+".apk";
+    }
+
+    public static String getRandomString(int length){
+        String str="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random=new Random();
+        StringBuffer sb=new StringBuffer();
+        for(int i=0;i<length;i++){
+            int number=random.nextInt(62);
+            sb.append(str.charAt(number));
+        }
+        return sb.toString();
     }
 }

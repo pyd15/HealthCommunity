@@ -60,6 +60,7 @@ import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.example.health_community.R;
+import com.example.health_community.util.SPUtils;
 import com.example.health_community.util.map.PoiOverlay;
 
 import java.util.ArrayList;
@@ -85,9 +86,8 @@ public class PoiSearchActivity extends FragmentActivity implements
     private float mCurrentAccracy;
     // UI相关
     RadioGroup.OnCheckedChangeListener radioButtonListener;
-    Button requestLocButton;
-        Button returnLocButton;
-//    ImageButton returnLocButton;
+    Button requestLocButton,returnLocButton,search_choice_btn;
+    //    ImageButton returnLocButton;
     boolean isFirstLoc = true; // 是否首次定位
     private MyLocationData locData;
     private float direction;
@@ -154,13 +154,38 @@ public class PoiSearchActivity extends FragmentActivity implements
         mSuggestionSearch.setOnGetSuggestionResultListener(this);
 
         editCity = (EditText) findViewById(R.id.city);
+        editCity.setText(SPUtils.getPrefString("city","北京"));
         keyWorldsView = (AutoCompleteTextView) findViewById(R.id.searchkey);
+        keyWorldsView.setText("医院");
         sugAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line);
         keyWorldsView.setAdapter(sugAdapter);
         keyWorldsView.setThreshold(1);
         mBaiduMap = ((SupportMapFragment) (getSupportFragmentManager().findFragmentById(R.id.map))).getBaiduMap();
-//        requestLocButton = findViewById(R.id.button1);
+        //        requestLocButton = findViewById(R.id.button1);
         returnLocButton = findViewById(R.id.reLo_btn);
+        search_choice_btn = findViewById(R.id.search_choice);
+        search_choice_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(PoiSearchActivity.this, search_choice_btn);
+                popupMenu.getMenuInflater().inflate(R.menu.popup_menu_choice, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.popup_menu_action_city:
+                                searchButtonProcess(null);
+                                break;
+                            case R.id.popup_menu_action_near:
+                                searchNearbyProcess(null);
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                popupMenu.show();
+            }
+        });
         //        requestLocButton.setOnClickListener(this);
         returnLocButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,7 +233,7 @@ public class PoiSearchActivity extends FragmentActivity implements
         });
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);//获取传感器管理服务
         mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
-//        requestLocButton.setText("普通");
+        //        requestLocButton.setText("普通");
         // 开启定位图层
         mBaiduMap.setMyLocationEnabled(true);
         mBaiduMap.setBuildingsEnabled(true);
@@ -328,6 +353,7 @@ public class PoiSearchActivity extends FragmentActivity implements
                 .keyword(keystr)
                 .pageNum(loadIndex)
                 .scope(1));
+//        goToNextPage(v);
     }
 
     /**
@@ -346,11 +372,39 @@ public class PoiSearchActivity extends FragmentActivity implements
                 .scope(1);
 
         mPoiSearch.searchNearby(nearbySearchOption);
+//        goToNextPage(v);
     }
 
     public void goToNextPage(View v) {
-        loadIndex++;
-        searchButtonProcess(null);
+        switch (searchType) {
+            case 0:
+                Toast.makeText(this, "搜索未开始！", Toast.LENGTH_SHORT).show();
+                break;
+            case 1:
+                loadIndex++;
+                searchButtonProcess(null);
+                break;
+            case 2:
+                loadIndex++;
+                searchNearbyProcess(null);
+                break;
+        }
+    }
+
+    public void goToLastPage(View view) {
+        switch (searchType) {
+            case 0:
+                Toast.makeText(this, "搜索未开始！", Toast.LENGTH_SHORT).show();
+                break;
+            case 1:
+                loadIndex--;
+                searchButtonProcess(null);
+                break;
+            case 2:
+                loadIndex--;
+                searchNearbyProcess(null);
+                break;
+        }
     }
 
     /**
@@ -364,7 +418,7 @@ public class PoiSearchActivity extends FragmentActivity implements
                 .bound(searchBound)
                 .keyword(keyWorldsView.getText().toString())
                 .scope(1));
-
+//        goToNextPage(v);
     }
 
 
@@ -384,10 +438,19 @@ public class PoiSearchActivity extends FragmentActivity implements
             PoiOverlay overlay = new MyPoiOverlay(mBaiduMap);
             mBaiduMap.setOnMarkerClickListener(overlay);
             overlay.setData(result);
-            //            Log.e("?????", result.getAllAddr().get(0).address);
+            List<PoiInfo> poiResults = result.getAllPoi();
+            List<PoiDetailInfo> poiDetailInfos = new ArrayList<>();
+            StringBuilder poi = new StringBuilder();
+            for (int i = 0; i < poiResults.size(); i++) {
+                poiDetailInfos.add(poiResults.get(i).getPoiDetailInfo());
+                poi.append(poiResults.get(i).getUid()).append(",");
+            }
+
+            mPoiSearch.searchPoiDetail((new PoiDetailSearchOption())
+                    .poiUids(poi.toString())); // uid的集合，最多可以传入10个uid，多个uid之间用英文逗号分隔。
+            Log.e("?????", poiDetailInfos.size() + "-" + poiResults.size() + "");
             overlay.addToMap();
             overlay.zoomToSpan();
-
             switch (searchType) {
                 case 2:
                     showNearbyArea(center, radius);
@@ -445,9 +508,11 @@ public class PoiSearchActivity extends FragmentActivity implements
             for (int i = 0; i < poiDetailInfoList.size(); i++) {
                 PoiDetailInfo poiDetailInfo = poiDetailInfoList.get(i);
                 if (null != poiDetailInfo) {
-                    Toast.makeText(PoiSearchActivity.this,
-                            poiDetailInfo.getName() + ": " + poiDetailInfo.getAddress(),
-                            Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(PoiSearchActivity.this,
+//                            poiDetailInfo.toString(),
+////                            poiDetailInfo.getName() + ": " + poiDetailInfo.getAddress(),
+//                            Toast.LENGTH_SHORT).show();
+                    Log.e("poidetial", poiDetailInfo.toString());
                 }
             }
         }
@@ -507,7 +572,7 @@ public class PoiSearchActivity extends FragmentActivity implements
      * @param radius 周边检索半径，单位米
      */
     public void showNearbyArea(LatLng center, int radius) {
-        BitmapDescriptor centerBitmap = BitmapDescriptorFactory.fromResource(R.drawable.search_nearby_icon);
+        BitmapDescriptor centerBitmap = BitmapDescriptorFactory.fromResource(R.drawable.round_icon);
         MarkerOptions ooMarker = new MarkerOptions().position(center).icon(centerBitmap);
         mBaiduMap.addOverlay(ooMarker);
 

@@ -12,12 +12,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BitmapDescriptor;
-import com.baidu.mapapi.map.BitmapDescriptorFactory;
-import com.baidu.mapapi.map.CircleOptions;
-import com.baidu.mapapi.map.MarkerOptions;
-import com.baidu.mapapi.map.OverlayOptions;
-import com.baidu.mapapi.map.Stroke;
 import com.baidu.mapapi.map.SupportMapFragment;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.model.LatLngBounds;
@@ -158,6 +152,8 @@ public class PoiSearchDemo extends FragmentActivity implements
             .keyword(keystr)
             .pageNum(loadIndex)
             .scope(1));
+
+        goToNextPage(v);
     }
 
     /**
@@ -176,6 +172,7 @@ public class PoiSearchDemo extends FragmentActivity implements
             .scope(1);
 
         mPoiSearch.searchNearby(nearbySearchOption);
+        goToNextPage(v);
     }
 
     public void goToNextPage(View v) {
@@ -194,7 +191,7 @@ public class PoiSearchDemo extends FragmentActivity implements
             .bound(searchBound)
             .keyword(keyWorldsView.getText().toString())
             .scope(1));
-
+        goToNextPage(v);
     }
 
 
@@ -334,16 +331,16 @@ public class PoiSearchDemo extends FragmentActivity implements
      * @param radius    周边检索半径，单位米
      */
     public void showNearbyArea(LatLng center, int radius) {
-        BitmapDescriptor centerBitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_geo);
-        MarkerOptions ooMarker = new MarkerOptions().position(center).icon(centerBitmap);
-        mBaiduMap.addOverlay(ooMarker);
-
-        OverlayOptions ooCircle = new CircleOptions().fillColor( 0xCCCCCC00 )
-            .center(center)
-            .stroke(new Stroke(5, 0xFFFF00FF ))
-            .radius(radius);
-
-        mBaiduMap.addOverlay(ooCircle);
+//        BitmapDescriptor centerBitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_geo);
+//        MarkerOptions ooMarker = new MarkerOptions().position(center).icon(centerBitmap);
+//        mBaiduMap.addOverlay(ooMarker);
+//
+//        OverlayOptions ooCircle = new CircleOptions().fillColor( 0xCCCCCC00 )
+//            .center(center)
+//            .stroke(new Stroke(5, 0xFFFF00FF ))
+//            .radius(radius);
+//
+//        mBaiduMap.addOverlay(ooCircle);
     }
 
 //    /**

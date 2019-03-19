@@ -29,7 +29,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.health_community.News;
+import com.example.health_community.model.News;
 import com.example.health_community.R;
 import com.example.health_community.adapter.RecyclerViewAdapter;
 import com.example.health_community.util.HttpAction;

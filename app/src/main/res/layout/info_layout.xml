@@ -8,7 +8,7 @@
         android:id="@+id/info_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.example.btf_final.fragment.InfoFragment"/>
+        android:name="com.example.health_community.fragment.MedicineInfoFragment"/>
 
 </LinearLayout>
 

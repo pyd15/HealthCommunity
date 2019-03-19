@@ -18,10 +18,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.health_community.News;
 import com.example.health_community.R;
-import com.example.health_community.adapter.NewsSeparated;
+import com.example.health_community.view.interf.NewsSeparated;
 import com.example.health_community.adapter.RecyclerViewAdapter;
+import com.example.health_community.model.News;
 import com.example.health_community.util.Constant;
 import com.example.health_community.util.HttpAction;
 import com.example.health_community.util.SPUtils;
@@ -96,8 +96,9 @@ public class RecycleViewFragment extends Fragment implements NewsSeparated {
         news=new Gson().fromJson(strJson, new TypeToken<List<News>>() {
         }.getType());
         if (news==null)
-            isNetWork = false;
+            Constant.isNetWork = false;
         else
+            Constant.isNetWork = true;
         Log.e("dasfasdfdasfasdf", news.size() + "");
 //        insertData =news.get(0);
         loadTimes = 0;

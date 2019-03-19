@@ -12,12 +12,9 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.health_community.Medicine;
+import com.example.health_community.model.Medicine;
 import com.example.health_community.R;
-import com.example.health_community.util.Constant;
 import com.github.chrisbanes.photoview.PhotoView;
-
-import java.util.ArrayList;
 
 /**
  * Created by Dr.P on 2018/3/18.
@@ -30,26 +27,26 @@ public class DFAdapter extends PagerAdapter {
     private Activity activity;
     private Dialog dialog;
     private FragmentManager fm;
-    private ArrayList<String> imgs;
+    private String[] imgs;
     private Medicine medicine;
     private int img_position;
 
-    public DFAdapter(Context context, Activity activity, Dialog dialog, FragmentManager fm, ArrayList<String> imageList, Medicine med) {
+    public DFAdapter(Context context, Activity activity, Dialog dialog, FragmentManager fm, String[] imageList) {
         this.context = context;
         this.activity=activity;
         this.dialog=dialog;
         this.fm = fm;
-        imgs = new ArrayList<>();
-        this.medicine = med;
-        for (int i = 0; i < imageList.size(); i++) {
-            imgs.add(imageList.get(i));
+        imgs = new String[imageList.length];
+//        this.medicine = med;
+        for (int i = 0; i < imageList.length; i++) {
+            imgs[i]=imageList[i];
         }
     }
 
     @Override
     public int getCount() {
 //        return Integer.MAX_VALUE;
-        return imgs!=null?imgs.size():0;
+        return imgs!=null?imgs.length:0;
     }
 
     @Override
@@ -64,15 +61,15 @@ public class DFAdapter extends PagerAdapter {
         Log.e("position", position + "");
         RequestOptions options = new RequestOptions().fitCenter().
                 placeholder(R.drawable.loading).error(R.drawable.fail_diy);
-        if (imgs.size() > 1) {
+        if (imgs.length > 1) {
             img_position = position;
-            Glide.with(context).load(Constant._URL + imgs.get(position%imgs.size())).apply(options).into(iv);
+            Glide.with(context).load(imgs[position%imgs.length]).apply(options).into(iv);
 //            Glide.with(context).load(imgs.get(position % imgs.size())).apply(options).into(iv);
-        } else if (imgs.size() == 1) {
-            Glide.with(context).load(Constant._URL + imgs.get(0)).apply(options).into(iv);
+        } else if (imgs.length == 1) {
+            Glide.with(context).load(imgs[0]).apply(options).into(iv);
 //            Glide.with(context).load(imgs.get(0)).apply(options).into(iv);
         } else {
-            Glide.with(context).load(context.getFilesDir().getAbsolutePath() + "/btf/zanwu.jpg").into(iv);
+            Glide.with(context).load(context.getFilesDir().getAbsolutePath() + "/files/zanwu.jpg").into(iv);
         }
         iv.setOnClickListener(new View.OnClickListener() {
             @Override

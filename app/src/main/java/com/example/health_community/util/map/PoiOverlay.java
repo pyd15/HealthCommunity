@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -18,6 +19,8 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.example.health_community.R;
+import com.example.health_community.activity.PoiSearchActivity;
+import com.example.health_community.view.DIYDialog;
 import com.example.health_community.view.InfoView;
 
 import java.util.ArrayList;
@@ -112,7 +115,7 @@ public class PoiOverlay extends OverlayManager {
 
     @Override
     public final boolean onMarkerClick(Marker marker) {
-        Log.e("markersize", mOverlayList.size()+"");
+        PoiSearchActivity activity = (PoiSearchActivity) context;
         if (mOverlayList.contains(marker)) {
             Log.e("contain", marker.getExtraInfo().getInt("index")+"");
             final LatLng ll = marker.getPosition();
@@ -126,7 +129,12 @@ public class PoiOverlay extends OverlayManager {
             infoView.setTv3(result.phoneNum, 10, Color.BLACK);
             infoView.setBackgroundResource(R.drawable.info_back);
             infoView.setBaiduMap(mBaiduMap);
-
+            infoView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                   new DIYDialog().create(activity,context);
+                }
+            });
             //初始化infoWindow，最后那个参数表示显示的位置相对于覆盖物的竖直偏移量，这里也可以传入一个监听器
             infoWindow = new InfoWindow(infoView, ll, -100);
             mBaiduMap.showInfoWindow(infoWindow);//显示此infoWindow

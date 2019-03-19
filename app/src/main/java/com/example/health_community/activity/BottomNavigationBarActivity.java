@@ -1,7 +1,9 @@
 package com.example.health_community.activity;
 
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,8 +13,10 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -35,15 +39,21 @@ import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
-import com.example.health_community.News;
+import com.baidu.location.BDAbstractLocationListener;
+import com.baidu.location.BDLocation;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.example.health_community.R;
 import com.example.health_community.adapter.BaseAdapter;
 import com.example.health_community.adapter.RecyclerViewAdapter;
 import com.example.health_community.fragment.BlankFragment;
 import com.example.health_community.fragment.HomeFragment;
 import com.example.health_community.fragment.InfoFragment;
-import com.example.health_community.util.Constant;
+import com.example.health_community.model.News;
+import com.example.health_community.util.ActivityCollector;
 import com.example.health_community.util.HttpAction;
+import com.example.health_community.util.NormalUtil;
+import com.example.health_community.util.SPUtils;
 
 import org.json.JSONException;
 
@@ -61,7 +71,8 @@ public class BottomNavigationBarActivity extends AppCompatActivity implements Vi
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private FloatingActionButton floatingActionButton;
-
+    public LocationClient mLocationClient = null;
+    private MyLocationListener myListener = new MyLocationListener();
     private Toolbar toolbar;
     private Button button;
     private View headerView;
@@ -85,15 +96,15 @@ public class BottomNavigationBarActivity extends AppCompatActivity implements Vi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottom_navigation_bar);
-
+        ActivityCollector.AddActivity(this);
         Window window = getWindow();
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         // getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(Color.argb(33, 0, 0, 0));
         initView();
-        if (!Constant.isNetWork)
-        Toast.makeText(this, "无法连接至服务器", Toast.LENGTH_LONG).show();
+        //        if (!Constant.isNetWork)
+        //        Toast.makeText(this, "无法连接至服务器", Toast.LENGTH_LONG).show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -131,41 +142,41 @@ public class BottomNavigationBarActivity extends AppCompatActivity implements Vi
         bottomNavigationView
                 .addItem(new BottomNavigationItem(R.drawable.ic_home_black_24dp, "首页"))
                 .addItem(new BottomNavigationItem(R.drawable.ic_import_contacts_black_24dp, "资讯"))
-                .addItem(new BottomNavigationItem(R.drawable.ic_message_black_24dp, "消息"))
+                .addItem(new BottomNavigationItem(R.drawable.ic_email_black_24dp, "消息"))
                 .addItem(new BottomNavigationItem(R.drawable.ic_perm_identity_black_24dp, "我的"))
                 .setFirstSelectedPosition(0)//设置默认选择的按钮
                 .initialise();//所有的设置需在调用该方法前完成
         //设置lab点击事件
         bottomNavigationView.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
-                    @Override
-                    public void onTabSelected(int position) {
-                        switch (position){
-                            case 0:
-                                mVpContent.setCurrentItem(0);
-                                break;
-                            case 1:
-                                mVpContent.setCurrentItem(1);
-                                break;
-                            case 2:
-                                mVpContent.setCurrentItem(2);
-                                break;
-                            case 3:
-                                mVpContent.setCurrentItem(3);
-                                break;
-                        }
-                    }
+            @Override
+            public void onTabSelected(int position) {
+                switch (position) {
+                    case 0:
+                        mVpContent.setCurrentItem(0);
+                        break;
+                    case 1:
+                        mVpContent.setCurrentItem(1);
+                        break;
+                    case 2:
+                        mVpContent.setCurrentItem(2);
+                        break;
+                    case 3:
+                        mVpContent.setCurrentItem(3);
+                        break;
+                }
+            }
 
-                    @Override
-                    public void onTabUnselected(int position) {
-                    }
+            @Override
+            public void onTabUnselected(int position) {
+            }
 
-                    @Override
-                    public void onTabReselected(int position) {
-                    }
-                });
+            @Override
+            public void onTabReselected(int position) {
+            }
+        });
         bottomNavigationView.setAutoHideEnabled(true);
         HomeFragment mainFragment = new HomeFragment();
-//        InfoFragment mainFragment = new InfoFragment();
+        //        InfoFragment mainFragment = new InfoFragment();
         InfoFragment mainFragment1 = new InfoFragment();
         BlankFragment mainFragment2 = new BlankFragment();
         BlankFragment mainFragment3 = new BlankFragment();
@@ -193,12 +204,36 @@ public class BottomNavigationBarActivity extends AppCompatActivity implements Vi
         //        viewPager = findViewById(R.id.view_pager_bottom_navigation);
         //        viewPager.setAdapter(pagerAdapter);
         //        viewPager.addOnPageChangeListener(pageChangeListener);
-
+        List<String> permissionList = new ArrayList<>();
         mVpContent.addOnPageChangeListener(pageChangeListener);
-
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.READ_PHONE_STATE);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+        if (!permissionList.isEmpty()) {
+            String[] permissions = permissionList.toArray(new String[permissionList.size()]);
+            ActivityCompat.requestPermissions(this, permissions, 1);
+        } else {
+            requestLocation();
+        }
 
         // If BottomNavigationView has more than 3 items, using reflection to disable shift mode
         //        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+    }
+
+    private void requestLocation() {
+        mLocationClient = new LocationClient(getApplicationContext());
+        //声明LocationClient类
+        mLocationClient.registerLocationListener(myListener);
+        LocationClientOption option = new LocationClientOption();
+        option.setIsNeedAddress(true);
+        mLocationClient.setLocOption(option);
+        mLocationClient.start();
     }
 
     private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -299,9 +334,9 @@ public class BottomNavigationBarActivity extends AppCompatActivity implements Vi
             case R.id.backup:
                 Toast.makeText(this, "Backup", Toast.LENGTH_SHORT).show();
                 break;
-//            case R.id.delete:
-//                Toast.makeText(this, "Delete", Toast.LENGTH_SHORT).show();
-//                break;
+            //            case R.id.delete:
+            //                Toast.makeText(this, "Delete", Toast.LENGTH_SHORT).show();
+            //                break;
             case R.id.settings:
                 // intent.setType("text/plain"); //纯文本
                 /*
@@ -369,6 +404,32 @@ public class BottomNavigationBarActivity extends AppCompatActivity implements Vi
         }
         drawerLayout.closeDrawers();
         return true;
+    }
+
+    public class MyLocationListener extends BDAbstractLocationListener {
+
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            StringBuilder currentPosition = new StringBuilder();
+            SPUtils.setPrefLong("latitude", (long) location.getLatitude());
+            SPUtils.setPrefLong("longtitude", (long) location.getLongitude());
+            SPUtils.setPrefString("province", location.getProvince());
+            SPUtils.setPrefString("city", location.getCity());
+            SPUtils.setPrefString("district", location.getDistrict());
+            SPUtils.setPrefString("street", location.getStreet());
+            //            Log.e("sdfafasdf", currentPosition.toString());
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        NormalUtil.showExitDialog(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityCollector.RemoveActivity(this);
     }
 }
 

@@ -89,6 +89,12 @@ public class SPUtils {
         setPrefString(key, new Gson().toJson(list));
     }
 
+    public static <T> void setPreObject(final String key, T t) {
+        if (t==null)
+            return;
+        setPrefString(key,new Gson().toJson(t));
+    }
+
     public static <News> List<News> getPreList(final String key,News t) {
         List<News> list;
         String strJson = getPrefString(key, null);

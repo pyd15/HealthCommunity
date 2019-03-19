@@ -19,13 +19,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.health_community.Medicine;
+import com.example.health_community.model.Medicine;
 import com.example.health_community.R;
 import com.example.health_community.view.viewpager.DFAdapter;
 import com.example.health_community.view.viewpager.GuardViewPager;
 import com.example.health_community.view.viewpager.ViewPagerIndicator;
-
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,7 +40,7 @@ public class ImageFragment extends DialogFragment {
     private LinearLayout ll;
 //    private PreviewBinding binding;
 
-    private static ArrayList<String> images;
+    private static String[] images;
 
     private static Context context;
     private static Medicine medicine;
@@ -51,8 +49,8 @@ public class ImageFragment extends DialogFragment {
         // Required empty public constructor
     }
 
-    public static ImageFragment newInstance(Context co, String imagePath, ArrayList<String> imgs, Medicine med) {
-        medicine = med;
+    public static ImageFragment newInstance(Context co, String imagePath, String[] imgs) {
+//        medicine = med;
         context = co;
         images = imgs;
         Bundle bundle = new Bundle();
@@ -74,13 +72,13 @@ public class ImageFragment extends DialogFragment {
 
         vp = (GuardViewPager) view.findViewById(R.id.vp_frag);
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        dfAdapter = new DFAdapter(context,getActivity(),getDialog(), fm, images, medicine);
+        dfAdapter = new DFAdapter(context,getActivity(),getDialog(), fm, images);
         vp.setAdapter(dfAdapter);
         ll = (LinearLayout) view.findViewById(R.id.ll_frag);
-        if (images.size() > 1) {
-            vp.addOnPageChangeListener(new ViewPagerIndicator(context, vp, ll, images.size()));
+        if (images.length > 1) {
+            vp.addOnPageChangeListener(new ViewPagerIndicator(context, vp, ll, images.length));
         } else {
-            vp.toggleSlide(false);//若该类蝴蝶只有一张图片则不进行切换显示
+            vp.toggleSlide(false);//若该类药品只有一张图片则不进行切换显示
         }
         view.setOnClickListener(new View.OnClickListener() {
             @Override

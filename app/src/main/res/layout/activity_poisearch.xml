@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="在"></TextView>
+            android:text="在"/>
 
         <EditText
             android:id="@+id/city"
@@ -24,7 +24,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="市内找"></TextView>
+            android:text="内找"/>
 
         <AutoCompleteTextView
             android:id="@+id/searchkey"
@@ -32,6 +32,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.88"
             android:text="餐厅"/>
+
+        <Button
+            android:id="@+id/search_choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="搜索"/>
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -43,28 +49,36 @@
             android:id="@+id/search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="12"
-            android:onClick="searchButtonProcess"
-            android:padding="10dip"
-            android:text="城市内搜索"/>
+            android:layout_weight="1"
+            android:onClick="goToNextPage"
+            android:background="@color/grey_primary"
+            android:text="@string/last_page"/>
+        <!--android:onClick="searchButtonProcess"-->
 
+        <View
+            android:layout_width="1dip"
+            android:layout_height="match_parent"
+            android:background="@color/line_color"
+            android:layout_gravity="center_horizontal"
+            />
         <Button
             android:id="@+id/searchNearby"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="12"
-            android:onClick="searchNearbyProcess"
-            android:padding="10dip"
-            android:text="周边搜索"/>
+            android:layout_weight="1"
+            android:onClick="goToLastPage"
+            android:background="@color/cyan_primary"
+            android:text="@string/next_page"/>
+        <!--android:onClick="searchNearbyProcess"-->
 
-        <Button
-            android:id="@+id/searchBound"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="12"
-            android:onClick="searchBoundProcess"
-            android:padding="10dip"
-            android:text="区域搜索"/>
+        <!--<Button-->
+            <!--android:id="@+id/searchBound"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="12"-->
+            <!--android:onClick="searchBoundProcess"-->
+            <!--android:padding="10dip"-->
+            <!--android:text="区域搜索"/>-->
     </LinearLayout>
 
     <FrameLayout
@@ -85,9 +99,6 @@
             android:id="@+id/reLo_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="@id/map"
             android:layout_marginStart="@dimen/dp_10"
             android:layout_marginLeft="@dimen/dp_10"
             android:layout_marginBottom="@dimen/dp_10"

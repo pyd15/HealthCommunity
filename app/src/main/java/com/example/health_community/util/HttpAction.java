@@ -9,7 +9,7 @@ import android.support.annotation.RequiresApi;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.example.health_community.News;
+import com.example.health_community.model.News;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -33,7 +33,7 @@ public class HttpAction<T> {
 
     public static <T> List<T> parseJSONWithJSONObject(final Context context, String url, String setString) throws JSONException {
         List<T> results = new ArrayList<>();
-        HttpUtil.sendOkHttpRequest(url, new Callback() {
+        HttpUtil.sendOkHttpGetRequest(url, new Callback() {
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {
             }
@@ -51,9 +51,9 @@ public class HttpAction<T> {
                     }
                     List<T> list = new Gson().fromJson(data.toString(), new TypeToken<List<T>>() {}.getType());
                     Log.e("size", list.size()+"");
-                    SPUtils.setPreList("news", list);
+                    SPUtils.setPreList(setString, list);
                     results.addAll(list);
-                    Log.e("test", SPUtils.getPrefString(setString,"?????"));
+//                    Log.e("test", SPUtils.getPrefString(setString,"?????"));
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -64,7 +64,7 @@ public class HttpAction<T> {
     }
 
     public static void parseJSONWithJSONObject(final Context context, String url) throws JSONException {
-        HttpUtil.sendOkHttpRequest(url, new Callback() {
+        HttpUtil.sendOkHttpGetRequest(url, new Callback() {
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {
             }
@@ -97,7 +97,7 @@ public class HttpAction<T> {
 //                    if (SPUtils.getPrefString("news",null)!=null)
 //                    SPUtils.removeData("news");
                     SPUtils.setPreList("news", news);
-                    Log.e("test", SPUtils.getPrefString("news","?????"));
+//                    Log.e("test", SPUtils.getPrefString("news","?????"));
                     //                    String name = data.getString("name");
                     //                    String updateContent = data.getString("updateContent");
                     //                    SPUtils.setPrefInt("code", code);

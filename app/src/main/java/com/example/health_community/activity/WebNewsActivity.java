@@ -1,20 +1,24 @@
 package com.example.health_community.activity;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.health_community.News;
 import com.example.health_community.R;
-import com.example.health_community.snackbar.SnackBarUtil;
+import com.example.health_community.model.News;
+import com.example.health_community.util.Constant;
+import com.example.health_community.util.SPUtils;
+import com.example.health_community.view.snackbar.SnackBarUtil;
 
 public class WebNewsActivity extends AppCompatActivity {
     //    @BindView(R.id.toolbar_web_view)
@@ -59,8 +63,15 @@ public class WebNewsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(WebNewsActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
-                        news.saveOrUpdate();
-                        floatingActionButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+                        Log.e("save", news.save() + "");
+                        if (SPUtils.getPrefBoolean(Constant.LOGIN_SUCCESS, false)) {
+                            floatingActionButton.setImageResource(R.drawable.ic_favorite_white_24dp);
+                        } else {
+                            Intent intent = new Intent(WebNewsActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                        }
+                        //                        floatingActionButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+//                        floatingActionButton.setBackgroundDrawable(getDrawable(R.drawable.ic_favorite_black_24dp));
                     }
 
                 });
