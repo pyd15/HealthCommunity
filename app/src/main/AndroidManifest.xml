@@ -51,7 +51,9 @@
         <meta-data
             android:name="android.webkit.WebView.EnableSafeBrowsing"
             android:value="true"/>
-
+        <meta-data
+            android:name="com.bumptech.glide.integration.okhttp3.OkHttpGlideModule"
+            android:value="GlideModule" />
         <activity
             android:name=".activity.SplashActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"

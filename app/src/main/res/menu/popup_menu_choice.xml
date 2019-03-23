@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
     >
 
     <item
         android:id="@+id/popup_menu_action_city"
         android:orderInCategory="100"
         android:title="城市内"
-        app:showAsAction="never" />
+        app:showAsAction="never"/>
 
     <item
         android:id="@+id/popup_menu_action_near"
         android:orderInCategory="100"
         android:title="周边"
-        app:showAsAction="never" />
+        app:showAsAction="never">
 
-     <!--   <menu>
-            <item
-                android:id="@+id/popup_menu_action_4"
-                android:orderInCategory="100"
-                android:title="item 1"
-                app:showAsAction="never" />
-            <item
-                android:id="@+id/popup_menu_action_5"
-                android:orderInCategory="100"
-                android:title="item 2"
-                app:showAsAction="never" />
-            <item
-                android:id="@+id/popup_menu_action_6"
-                android:orderInCategory="100"
-                android:title="item 3"
-                app:showAsAction="never" />
-        </menu>-->
-
- <!--   </item>-->
+    <menu>
+        <item
+            android:id="@+id/one_ko"
+            android:orderInCategory="100"
+            android:title="1公里内"
+            app:showAsAction="never"/>
+        <item
+            android:id="@+id/five_ko"
+            android:orderInCategory="100"
+            android:title="5公里内"
+            app:showAsAction="never"/>
+        <item
+            android:id="@+id/ten_ko"
+            android:orderInCategory="100"
+            android:title="10公里内"
+            app:showAsAction="never"/>
+    </menu>
+    </item>
+    <!--   </item>-->
 </menu>

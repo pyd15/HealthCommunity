@@ -95,17 +95,18 @@
             android:layout_marginRight="25dp"
             />-->
 
-        <Button
-            android:id="@+id/reLo_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_10"
-            android:layout_marginLeft="@dimen/dp_10"
-            android:layout_marginBottom="@dimen/dp_10"
-            android:background="@color/transparent"
-            android:drawableLeft="@drawable/ic_my_location_white_24dp"
-            android:drawableStart="@drawable/ic_my_location_white_24dp"
-            />
+        <!--<Button-->
+            <!--android:id="@+id/reLo_btn"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginStart="@dimen/dp_10"-->
+            <!--android:layout_marginLeft="@dimen/dp_10"-->
+            <!--android:layout_marginBottom="@dimen/dp_10"-->
+            <!--android:background="@color/transparent"-->
+            <!--android:drawableLeft="@drawable/ic_my_location_white_24dp"-->
+            <!--android:drawableStart="@drawable/ic_my_location_white_24dp"-->
+            <!--/>-->
+
         <!--<Button
             android:id="@+id/button2"
             android:layout_width="wrap_content"
@@ -120,6 +121,17 @@
             class="com.baidu.mapapi.map.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+
+        <ImageButton
+            android:id="@+id/reLo_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_3"
+            android:layout_marginLeft="@dimen/dp_3"
+            android:layout_marginTop="@dimen/dp_3"
+            android:layout_marginBottom="@dimen/dp_3"
+
+            android:background="@mipmap/ic_my_location_"/>
 
     </FrameLayout>
 

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <litepal>
     <dbname value="HealthCommunityStore"></dbname>
-    <version value="1"/>
+    <version value="2"/>
     <list>
         <mapping class="com.example.health_community.model.News"/>
         <mapping class="com.example.health_community.model.Medicine"/>
         <mapping class="com.example.health_community.model.Hospital"/>
+        <mapping class="com.example.health_community.model.AppointMent"/>
     </list>
 </litepal>

@@ -9,6 +9,7 @@ import android.support.annotation.RequiresApi;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.example.health_community.model.BigDepartment;
 import com.example.health_community.model.News;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -89,14 +90,14 @@ public class HttpAction<T> {
 //                                        Log.e("json", data.toString());
 //                    Toast.makeText(context, data.toString(), Toast.LENGTH_LONG).show();
                     List<News> news = new Gson().fromJson(data.toString(), new TypeToken<List<News>>() {}.getType());
-                    for (News news1 : news) {
-                        Log.e("img", news1.getNews_image());
-//                        news1.saveOrUpdate();
-                    }
-                    Log.e("size", news.size()+"");
+//                    for (News news1 : news) {
+//                        Log.e("img", news1.getNews_image());
+////                        news1.saveOrUpdate();
+//                    }
+//                    Log.e("size", news.size()+"");
 //                    if (SPUtils.getPrefString("news",null)!=null)
 //                    SPUtils.removeData("news");
-                    SPUtils.setPreList("news", news);
+                    SPUtils.setPreList(Constant.NEWS, news);
 //                    Log.e("test", SPUtils.getPrefString("news","?????"));
                     //                    String name = data.getString("name");
                     //                    String updateContent = data.getString("updateContent");
@@ -109,37 +110,24 @@ public class HttpAction<T> {
         });
     }
 
-    //    public static boolean parseJSONWithGSON(String jsonData) throws ExecutionException, InterruptedException {
-    //        try {
-    //            Boolean flag = false;
-    //            String msg = jsonData.substring(jsonData.length() - 1, jsonData.length());
-    //            Gson gson = new Gson();
-    //            ButterflyInfo butterflyInfo1 = gson.fromJson(jsonData.substring(0, jsonData.length() - 2), new TypeToken<ButterflyInfo>() {
-    //            }.getType());
-    //            List<Medicine> butterflyInfoList = butterflyInfo1.MedicineList;
-    //            if (msg.equals("+")) {
-    //                flag = InsertSQL(butterflyInfoList);
-    //            } else if (msg.equals("-")) {
-    //                flag = DeleteSQL(butterflyInfoList);
-    //            } else if (msg.equals("=")) {
-    //                flag = UpdateSQL(butterflyInfoList);
-    //            } else {
-    //                Log.d("sqlerror", "No match!");
-    //            }
-    //            return flag;
-    //        } catch (Exception e) {
-    //            e.printStackTrace();//        }
-    //        return false;
-    //    }
-    public static String handleMessage(String name, String updateContent) {
-        String[] strings = updateContent.split("/n");
-        String udContent = "";
-        for (String s : strings) {
-            udContent += s + "\n\n";
+        public static List<BigDepartment> parseJSONWithGSON(String jsonData) throws JSONException {
+                Gson gson = new Gson();
+                JSONObject object = new JSONObject(jsonData);
+                JSONArray data = object.getJSONArray("data");
+                List<BigDepartment> bigDepartments = gson.fromJson(data.toString(), new TypeToken<List<BigDepartment>>() {
+                }.getType());
+                Log.e("gson", bigDepartments.get(0).getHos_name());
+                return bigDepartments;
         }
-        String splitLine = "------------------------------------------------------------\n\n";
-        return "版本名:" + name + "\n\n" + splitLine + "更新内容：\n\n" + udContent + splitLine + "是否更新？";
-    }
+//    public static String handleMessage(String name, String updateContent) {
+//        String[] strings = updateContent.split("/n");
+//        String udContent = "";
+//        for (String s : strings) {
+//            udContent += s + "\n\n";
+//        }
+//        String splitLine = "------------------------------------------------------------\n\n";
+//        return "版本名:" + name + "\n\n" + splitLine + "更新内容：\n\n" + udContent + splitLine + "是否更新？";
+//    }
 
     //    public static String handleResponse(String oldData, String newData) {
     //        String head = newData.substring(0, 35);

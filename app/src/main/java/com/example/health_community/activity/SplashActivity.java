@@ -31,11 +31,43 @@ public class SplashActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
+//        try {
+//            HttpAction.parseJSONWithJSONObject(this, Constant.GET_NEWS_URL+"39_ys");
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+        String category = "39_xinzhi";
         try {
-            HttpAction.parseJSONWithJSONObject(this, Constant.GET_NEWS_URL+"39_ys");
+            HttpAction.parseJSONWithJSONObject(this, Constant.GET_NEWS_URL + category, category);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        category = "39_ys";
+        try {
+            HttpAction.parseJSONWithJSONObject(this, Constant.GET_NEWS_URL + category, category);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        category = "xinzhi";
+        try {
+            HttpAction.parseJSONWithJSONObject(this, Constant.GET_NEWS_URL + category, category);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        category = "39_xlbk";
+        try {
+            HttpAction.parseJSONWithJSONObject(this, Constant.GET_NEWS_URL + category, category);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        category = "keyan";
+        try {
+            HttpAction.parseJSONWithJSONObject(this, Constant.GET_NEWS_URL + category, category);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        
+        
         pv_logo = findViewById(R.id.pv_logo);
         pv_logo.setOnParticleAnimListener(new ParticleView.ParticleAnimListener() {
             @Override

@@ -53,7 +53,7 @@
     <string name="med_effect">疗效</string>
     <string name="dialog_ok">预约</string>
     <string name="dialog_cancel">取消</string>
-    <string name="department_appoint">预约科室</string>
+    <string name="department_appoint">自助挂号</string>
     <string name="next_page">下一页</string>
     <string name="last_page">上一页</string>
 

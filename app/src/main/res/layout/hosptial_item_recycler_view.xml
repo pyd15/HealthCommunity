@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:id="@+id/card_view_item_recycler_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="3dp"
+    android:background="@color/white"
+    android:foreground="?attr/selectableItemBackground"
+    card_view:cardCornerRadius="@dimen/card_recycler_corner_radius"
+    card_view:cardElevation="@dimen/card_recycler_elevation">
+    <!--android:layout_marginBottom="@dimen/card_margin_vertical_big_activity"
+    android:layout_marginEnd="@dimen/card_margin_horizontal_big_activity"
+    android:layout_marginStart="@dimen/card_margin_horizontal_big_activity"
+    android:layout_marginTop="@dimen/card_margin_vertical_big_activity"-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="15dp">
+
+        <ImageView
+            android:id="@+id/hos_img"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:layout_marginRight="@dimen/text_margin"
+            android:backgroundTint="@color/gray_light"
+            android:src="@drawable/ic_hospital"
+            />
+        <!--android:transitionName="shareView"-->
+
+        <TextView
+            android:id="@+id/hos_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/hos_img"
+            android:layout_marginTop="@dimen/dp_3"
+            android:text="@string/tv_recycler_item_1"
+
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/hos_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/hos_name"
+            android:layout_marginTop="@dimen/text_margin_very_small"
+            android:layout_toRightOf="@id/hos_img"
+            android:textSize="13sp"
+            android:drawableLeft="@drawable/ic_location_on_blue_grey_500_18dp"
+            android:text="地址"/>
+
+        <TextView
+            android:id="@+id/hos_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/hos_address"
+            android:layout_marginTop="@dimen/text_margin_very_small"
+            android:textSize="13sp"
+            android:layout_toRightOf="@id/hos_img"
+            android:drawableLeft="@drawable/ic_call_blue_grey_500_18dp"
+            android:text="电话"
+            />
+
+        <TextView
+            android:id="@+id/hos_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/hos_phone"
+            android:layout_marginTop="@dimen/text_margin_very_small"
+            android:textSize="13sp"
+            android:layout_toRightOf="@id/hos_img"
+            android:drawableLeft="@drawable/ic_my_location_blue_grey_500_18dp"
+            android:text="离我多远"
+            />
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

@@ -1,5 +1,9 @@
 package com.example.health_community.model;
 
+import org.litepal.annotation.Column;
+import org.litepal.crud.LitePalSupport;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,8 +13,9 @@ import java.util.List;
  * desc:
  */
 
-public class Hospital {
+public class Hospital extends LitePalSupport implements Serializable {
     private String hos_id;
+    @Column(unique = true)
     private String hos_name;
     private String hos_phone;
     private String hos_address;
@@ -18,6 +23,9 @@ public class Hospital {
     private String hos_city;
     private String hos_province;
     private List<BigDepartment> bigDepartments;
+
+    public Hospital() {
+    }
 
     public Hospital(String hos_id, String hos_name) {
         this.hos_id=hos_id;
@@ -97,6 +105,20 @@ public class Hospital {
 
     public void setBigDepartments(List<BigDepartment> bigDepartments) {
         this.bigDepartments = bigDepartments;
+    }
+
+    @Override
+    public String toString() {
+        return "Hospital{" +
+                "hos_id='" + hos_id + '\'' +
+                ", hos_name='" + hos_name + '\'' +
+                ", hos_phone='" + hos_phone + '\'' +
+                ", hos_address='" + hos_address + '\'' +
+                ", hos_area='" + hos_area + '\'' +
+                ", hos_city='" + hos_city + '\'' +
+                ", hos_province='" + hos_province + '\'' +
+                ", bigDepartments=" + bigDepartments +
+                '}';
     }
 }
 

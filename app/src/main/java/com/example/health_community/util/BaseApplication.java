@@ -164,6 +164,8 @@ public class BaseApplication extends LitePalApplication {
             SPUtils.setPrefString("city",location.getCity());
             SPUtils.setPrefString("district",location.getDistrict());
             SPUtils.setPrefString("street",location.getStreet());
+            Constant.latitude = String.valueOf(location.getLatitude());
+            Constant.longitude = String.valueOf(location.getLongitude());
 //            Log.e("sdfafasdf", currentPosition.toString());
             }
         }

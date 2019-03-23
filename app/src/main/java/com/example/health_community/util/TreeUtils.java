@@ -22,8 +22,6 @@ public class TreeUtils {
         }
     }
 
-
-
     public static TreePoint getTreePoint(String ID, HashMap<String,TreePoint> map){
         if(map.containsKey(ID)){
             return map.get(ID);

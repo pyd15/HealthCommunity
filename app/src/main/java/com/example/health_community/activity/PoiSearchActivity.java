@@ -11,13 +11,13 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -59,11 +59,16 @@ import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
+import com.baidu.mapapi.utils.DistanceUtil;
 import com.example.health_community.R;
+import com.example.health_community.model.Hospital;
+import com.example.health_community.util.Constant;
 import com.example.health_community.util.SPUtils;
 import com.example.health_community.util.map.PoiOverlay;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -71,7 +76,7 @@ import java.util.List;
  */
 public class PoiSearchActivity extends FragmentActivity implements
         SensorEventListener, View.OnClickListener, OnGetPoiSearchResultListener, OnGetSuggestionResultListener {
-
+    public static final String action = "jason.broadcast.action";
     // 定位相关
     LocationClient mLocClient;
     public MyLocationListenner myListener = new MyLocationListenner();
@@ -86,8 +91,9 @@ public class PoiSearchActivity extends FragmentActivity implements
     private float mCurrentAccracy;
     // UI相关
     RadioGroup.OnCheckedChangeListener radioButtonListener;
-    Button requestLocButton,returnLocButton,search_choice_btn;
-    //    ImageButton returnLocButton;
+    Button requestLocButton,search_choice_btn;
+    //    Button returnLocButton;
+    ImageButton returnLocButton;
     boolean isFirstLoc = true; // 是否首次定位
     private MyLocationData locData;
     private float direction;
@@ -176,7 +182,19 @@ public class PoiSearchActivity extends FragmentActivity implements
                             case R.id.popup_menu_action_city:
                                 searchButtonProcess(null);
                                 break;
-                            case R.id.popup_menu_action_near:
+//                            case R.id.popup_menu_action_near:
+//                                searchNearbyProcess(null);
+//                                break;
+                            case R.id.one_ko:
+                                radius=1000;
+                                searchNearbyProcess(null);
+                                break;
+                            case R.id.five_ko:
+                                radius=5000;
+                                searchNearbyProcess(null);
+                                break;
+                            case R.id.ten_ko:
+                                radius=10000;
                                 searchNearbyProcess(null);
                                 break;
                         }
@@ -347,7 +365,6 @@ public class PoiSearchActivity extends FragmentActivity implements
 
         String citystr = editCity.getText().toString();
         String keystr = keyWorldsView.getText().toString();
-
         mPoiSearch.searchInCity((new PoiCitySearchOption())
                 .city(citystr)
                 .keyword(keystr)
@@ -448,7 +465,28 @@ public class PoiSearchActivity extends FragmentActivity implements
 
             mPoiSearch.searchPoiDetail((new PoiDetailSearchOption())
                     .poiUids(poi.toString())); // uid的集合，最多可以传入10个uid，多个uid之间用英文逗号分隔。
-            Log.e("?????", poiDetailInfos.size() + "-" + poiResults.size() + "");
+//            Log.e("?????", poiDetailInfos.size() + "-" + poiResults.size() + "");
+//            Toast.makeText(this, overlay.getPoiResult().getAllPoi().size() + "", Toast.LENGTH_SHORT).show();
+//            List<PoiInfo> poiInfos = mPoiResult.getAllPoi();
+            LatLng latLng,userLatLng;
+//            userLatLng = new LatLng(Double.parseDouble(SPUtils.getPrefString(Constant.USER_LATITUDE,
+//                    "23.128479")),
+//                    Double.parseDouble(SPUtils.getPrefString(Constant.USER_LONGITUDE, "113.376542")));
+            userLatLng = new LatLng(Double.parseDouble(Constant.latitude), Double.parseDouble(Constant.longitude));
+            for (PoiInfo p : poiResults) {
+                latLng = new LatLng(p.location.latitude, p.location.longitude);
+                p.setDistance((int) DistanceUtil.getDistance(userLatLng,latLng));
+            }
+            sortPoi(poiResults);
+            List<Hospital> hospitals = new ArrayList<>();
+            for (int i1 = 0;i1<poiResults.size();i1++) {
+                hospitals.add(new Hospital(String.valueOf(poiResults.get(i1).distance), poiResults.get(i1).name, poiResults.get(i1).phoneNum,
+//                        poiResults.get(i1).address, poiResults.get(i1).area, poiResults.get(i1).city, poiResults.get(i1).province));
+                        poiResults.get(i1).address, poiResults.get(i1).area, poiResults.get(i1).city, poiResults.get(i1).uid));
+                hospitals.get(i1).saveOrUpdate("hos_name=?", hospitals.get(i1).getHos_name());
+            }
+//            LitePal.saveAll(hospitals);
+            SPUtils.setPreList(Constant.NEARBY_HOSPITAL,hospitals);
             overlay.addToMap();
             overlay.zoomToSpan();
             switch (searchType) {
@@ -505,16 +543,16 @@ public class PoiSearchActivity extends FragmentActivity implements
                 return;
             }
 
-            for (int i = 0; i < poiDetailInfoList.size(); i++) {
-                PoiDetailInfo poiDetailInfo = poiDetailInfoList.get(i);
-                if (null != poiDetailInfo) {
-//                    Toast.makeText(PoiSearchActivity.this,
-//                            poiDetailInfo.toString(),
-////                            poiDetailInfo.getName() + ": " + poiDetailInfo.getAddress(),
-//                            Toast.LENGTH_SHORT).show();
-                    Log.e("poidetial", poiDetailInfo.toString());
-                }
-            }
+//            for (int i = 0; i < poiDetailInfoList.size(); i++) {
+//                PoiDetailInfo poiDetailInfo = poiDetailInfoList.get(i);
+//                if (null != poiDetailInfo) {
+////                    Toast.makeText(PoiSearchActivity.this,
+////                            poiDetailInfo.toString(),
+//////                            poiDetailInfo.getName() + ": " + poiDetailInfo.getAddress(),
+////                            Toast.LENGTH_SHORT).show();
+//                    Log.e("poidetial", poiDetailInfo.toString());
+//                }
+//            }
         }
     }
 
@@ -609,7 +647,7 @@ public class PoiSearchActivity extends FragmentActivity implements
             } else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {
                 currentPosition.append("网络");
             }
-            Log.e("PoiSearchActivity", currentPosition.toString());
+//            Log.e("PoiSearchActivity", currentPosition.toString());
             mCurrentLat = location.getLatitude();
             mCurrentLon = location.getLongitude();
             center = new LatLng(mCurrentLat, mCurrentLon);
@@ -627,6 +665,10 @@ public class PoiSearchActivity extends FragmentActivity implements
                 MapStatus.Builder builder = new MapStatus.Builder();
                 builder.target(ll).zoom(16.0f);
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+//                SPUtils.setPrefString(Constant.USER_LATITUDE, String.valueOf(location.getLatitude()));
+//                SPUtils.setPrefString(Constant.USER_LONGITUDE, String.valueOf(location.getLongitude()));
+                Constant.latitude = String.valueOf(location.getLatitude());
+                Constant.longitude = String.valueOf(location.getLongitude());
             }
         }
 
@@ -634,6 +676,17 @@ public class PoiSearchActivity extends FragmentActivity implements
         }
     }
 
+    public void sortPoi(List<PoiInfo> poiInfos) {
+        Comparator<PoiInfo> comparator = new Comparator<PoiInfo>(){
+            public int compare(PoiInfo s1, PoiInfo s2) {
+                //先排年龄
+                if(s1.distance!=s2.distance){
+                    return s1.distance-s2.distance;
+                }else return 1;
+            }
+        };
+        Collections.sort(poiInfos,comparator);
+    }
 
     /**
      * 对区域检索的范围进行绘制

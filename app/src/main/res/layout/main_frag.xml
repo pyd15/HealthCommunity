@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
+    android:background="@color/white_alpha"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     >
 
@@ -130,9 +131,18 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="10dp"
+            android:layout_height="7dp"
             android:background="@color/gray_light"
             />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textColor="@color/app_red"
+            android:background="@color/white"
+            android:text="附近的医院"/>
 
         <!--<android.support.design.widget.TabLayout-->
                 <!--android:id="@+id/tab_layout_info"-->
@@ -141,6 +151,7 @@
                 <!--style="@style/TabLayoutStyle"-->
                 <!--/>-->
         <!--style="@style/TabLayoutTextAppearance"-->
+        <include layout="@layout/content_recycler_view"/>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/view_pager_info"

@@ -13,19 +13,18 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.health_community.R;
-import com.example.health_community.view.interf.NewsSeparated;
 import com.example.health_community.adapter.RecyclerViewAdapter;
 import com.example.health_community.model.News;
 import com.example.health_community.util.Constant;
 import com.example.health_community.util.HttpAction;
 import com.example.health_community.util.SPUtils;
 import com.example.health_community.view.ItemTouchHelperCallback;
+import com.example.health_community.view.interf.NewsSeparated;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -51,7 +50,7 @@ public class RecycleViewFragment extends Fragment implements NewsSeparated {
     private List<News> news;
     private List<News> allNews;
     private News insertData;
-    private boolean loading,isNetWork;
+    private boolean loading, isNetWork;
     private int loadTimes;
     private int count;
     private String category, adminName;
@@ -85,34 +84,41 @@ public class RecycleViewFragment extends Fragment implements NewsSeparated {
         //        setHasOptionsMenu(true);
         initData();
         if (Constant.isNetWork)
-        initView();
+            initView();
         return view;
     }
 
     private void initData() {
-//        news = LitePal.where("category like ?", "%" + category + "%").find(Book.class);
+        //        news = LitePal.where("category like ?", "%" + category + "%").find(Book.class);
         //        allNews = LitePal.findAll(Book.class);
-        String strJson = SPUtils.getPrefString("news", null);
-        news=new Gson().fromJson(strJson, new TypeToken<List<News>>() {
+        //        String strJson = SPUtils.getPrefString("news", null);
+        //        news=new Gson().fromJson(strJson, new TypeToken<List<News>>() {
+        //        }.getType());
+//        try {
+//            HttpAction.parseJSONWithJSONObject(context, Constant.GET_NEWS_URL + category, category);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+        news = new Gson().fromJson(SPUtils.getPrefString(category, null), new TypeToken<List<News>>() {
         }.getType());
-        if (news==null)
+        if (news == null)
             Constant.isNetWork = false;
         else
             Constant.isNetWork = true;
-        Log.e("dasfasdfdasfasdf", news.size() + "");
-//        insertData =news.get(0);
+//        Log.e("dasfasdfdasfasdf", news.size() + "");
+        //        insertData =news.get(0);
         loadTimes = 0;
     }
 
-//    @Override
-//    public void onAttach(Activity activity) {
-//        super.onAttach(activity);
-//        if (activity instanceof MainActivity) {
-//            MainActivity bottomNavigationActivity = (MainActivity) activity;
-//            toolbar = (Toolbar) view.findViewById(R.id.main_toolbar);
-//            toolbar.setTitle("图书列表");
-//        }
-//    }
+    //    @Override
+    //    public void onAttach(Activity activity) {
+    //        super.onAttach(activity);
+    //        if (activity instanceof MainActivity) {
+    //            MainActivity bottomNavigationActivity = (MainActivity) activity;
+    //            toolbar = (Toolbar) view.findViewById(R.id.main_toolbar);
+    //            toolbar.setTitle("图书列表");
+    //        }
+    //    }
 
     private void initView() {
         //        fab =view.findViewById(R.id.fab_recycler_view_frag);
@@ -136,57 +142,64 @@ public class RecycleViewFragment extends Fragment implements NewsSeparated {
         recyclerView.setAdapter(adapter);
         SPUtils.setPrefInt(Constant.RECYCLER_LIST, 1);
 
-        ItemTouchHelper.Callback callback = new ItemTouchHelperCallback(adapter);
+        ItemTouchHelper.Callback callback = new ItemTouchHelperCallback(adapter,context);
         ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(callback);
+//        mItemTouchHelper.attachToRecyclerView(recyclerView);
         //        Log.e("sp_key", sp.getString(Constant.USER_NAME, null));
-//        adminName = SPUtils.getPrefString(Constant.ADMIN, null);
-//        if (adminName != null && adminName.equals("admin")) {
-//            mItemTouchHelper.attachToRecyclerView(recyclerView);
-//        }
+        //        adminName = SPUtils.getPrefString(Constant.ADMIN, null);
+        //        if (adminName != null && adminName.equals("admin")) {
+        //            mItemTouchHelper.attachToRecyclerView(recyclerView);
+        //        }
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout_recycler_view);
         swipeRefreshLayout.setColorSchemeResources(R.color.google_blue, R.color.google_green, R.color.google_red, R.color.google_yellow);
         swipeRefreshLayout.setOnRefreshListener(() -> new Handler().postDelayed(() -> {
-//            if (color > 4) {
-//                color = 0;
+            //            if (color > 4) {
+            //                color = 0;
+            //            }
+            //            adapter.setColor(++color);
+//            try {
+//                news = HttpAction.parseJSONWithJSONObject(context, Constant.GET_NEWS_URL + category, "");
+//            } catch (JSONException e) {
+//                e.printStackTrace();
 //            }
-//            adapter.setColor(++color);
             try {
-                HttpAction.parseJSONWithJSONObject(context,"https://pydwp.xyz/JSoupDemo/News/getJsonNews.do?news_type=1");
+                HttpAction.parseJSONWithJSONObject(context, Constant.GET_NEWS_URL + category, category);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            news = new Gson().fromJson(SPUtils.getPrefString(category, null), new TypeToken<List<News>>() {
+            }.getType());
             adapter.clearItems();
             loading = false;
-            String strJson = SPUtils.getPrefString("news", null);
-            news=new Gson().fromJson(strJson, new TypeToken<List<News>>() {}.getType());
-            adapter.addItems(news);
+            //            String strJson = SPUtils.getPrefString("news", null);
+            //            news=new Gson().fromJson(strJson, new TypeToken<List<News>>() {}.getType());
+                        adapter.addItems(news);
             adapter.addFooter();
             adapter.notifyDataSetChanged();
             swipeRefreshLayout.setRefreshing(false);
         }, 2000));
-
         recyclerView.addOnScrollListener(scrollListener);
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        //        Toast.makeText(context, "onResume", Toast.LENGTH_SHORT).show();
-//        news.clear();
-//        //        allNews.clear();
-////        if (SPUtils.getPrefInt(Constant.RECYCLER_LIST, 1) > 1)
-////            adapter.clear();
-//        //        new Handler().postDelayed(new Runnable() {
-//        //            @Override
-//        //            public void run() {
-//        initData();
-//        adapter.setItems(news);
-//        adapter.addFooter();
-//        adapter.notifyDataSetChanged();
-//        //            }
-//        //        }, 100);
-//        SPUtils.setPrefInt(Constant.RECYCLER_LIST, SPUtils.getPrefInt(Constant.RECYCLER_LIST, 1) + 1);
-//    }
+    //    @Override
+    //    public void onResume() {
+    //        super.onResume();
+    //        //        Toast.makeText(context, "onResume", Toast.LENGTH_SHORT).show();
+    //        news.clear();
+    //        //        allNews.clear();
+    ////        if (SPUtils.getPrefInt(Constant.RECYCLER_LIST, 1) > 1)
+    ////            adapter.clear();
+    //        //        new Handler().postDelayed(new Runnable() {
+    //        //            @Override
+    //        //            public void run() {
+    //        initData();
+    //        adapter.setItems(news);
+    //        adapter.addFooter();
+    //        adapter.notifyDataSetChanged();
+    //        //            }
+    //        //        }, 100);
+    //        SPUtils.setPrefInt(Constant.RECYCLER_LIST, SPUtils.getPrefInt(Constant.RECYCLER_LIST, 1) + 1);
+    //    }
 
 
     RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
@@ -197,20 +210,31 @@ public class RecycleViewFragment extends Fragment implements NewsSeparated {
             final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
             count = linearLayoutManager.getItemCount();
             if (!loading && linearLayoutManager.getItemCount() == (linearLayoutManager.findLastVisibleItemPosition() + 1)) {
+                //                try {
+                //                    HttpAction.parseJSONWithJSONObject(context,Constant.GET_NEWS_URL+category);
+                //                } catch (JSONException e) {
+                //                    e.printStackTrace();
+                //                }
+//                try {
+//                    news = HttpAction.parseJSONWithJSONObject(context, Constant.GET_NEWS_URL + category, "");
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
                 try {
-                    HttpAction.parseJSONWithJSONObject(context,"https://pydwp.xyz/JSoupDemo/News/getJsonNews.do?news_type=1");
+                    HttpAction.parseJSONWithJSONObject(context, Constant.GET_NEWS_URL + category, category);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
+                news = new Gson().fromJson(SPUtils.getPrefString(category, null), new TypeToken<List<News>>() {
+                }.getType());
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         if (loadTimes <= 2) {
                             adapter.removeFooter();
                             loading = false;
-                            String strJson = SPUtils.getPrefString("news", null);
-                            news=new Gson().fromJson(strJson, new TypeToken<List<News>>() {}.getType());
+                            //                            String strJson = SPUtils.getPrefString("news", null);
+                            //                            news=new Gson().fromJson(strJson, new TypeToken<List<News>>() {}.getType());
                             adapter.addItems(news);
                             adapter.addFooter();
                             loadTimes++;
@@ -230,37 +254,37 @@ public class RecycleViewFragment extends Fragment implements NewsSeparated {
 
                 loading = true;
             }
-//            if (!loading && count == (linearLayoutManager.findLastVisibleItemPosition() + 1)) {
-//
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Log.e("count", String.valueOf(count));
-//                        if (loadTimes <= 2) {
-//                            adapter.removeFooter();
-//                            loading = false;
-//                            String strJson = SPUtils.getPrefString("news", null);
-//                            news=new Gson().fromJson(strJson, new TypeToken<List<News>>() {}.getType());
-//                            adapter.addItems(news);
-//                            adapter.addFooter();
-//                            count++;
-//                            loadTimes++;
-//                        } else {
-//                            adapter.removeFooter();
-//                            Snackbar.make(recyclerView, getString(R.string.no_more_data), Snackbar.LENGTH_SHORT).setCallback(new Snackbar.Callback() {
-//                                @Override
-//                                public void onDismissed(Snackbar transientBottomBar, int event) {
-//                                    super.onDismissed(transientBottomBar, event);
-//                                    loading = false;
-//                                    adapter.addFooter();
-//                                }
-//                            }).show();
-//                        }
-//                    }
-//                }, 1500);
-//
-//                loading = true;
-//            }
+            //            if (!loading && count == (linearLayoutManager.findLastVisibleItemPosition() + 1)) {
+            //
+            //                new Handler().postDelayed(new Runnable() {
+            //                    @Override
+            //                    public void run() {
+            //                        Log.e("count", String.valueOf(count));
+            //                        if (loadTimes <= 2) {
+            //                            adapter.removeFooter();
+            //                            loading = false;
+            //                            String strJson = SPUtils.getPrefString("news", null);
+            //                            news=new Gson().fromJson(strJson, new TypeToken<List<News>>() {}.getType());
+            //                            adapter.addItems(news);
+            //                            adapter.addFooter();
+            //                            count++;
+            //                            loadTimes++;
+            //                        } else {
+            //                            adapter.removeFooter();
+            //                            Snackbar.make(recyclerView, getString(R.string.no_more_data), Snackbar.LENGTH_SHORT).setCallback(new Snackbar.Callback() {
+            //                                @Override
+            //                                public void onDismissed(Snackbar transientBottomBar, int event) {
+            //                                    super.onDismissed(transientBottomBar, event);
+            //                                    loading = false;
+            //                                    adapter.addFooter();
+            //                                }
+            //                            }).show();
+            //                        }
+            //                    }
+            //                }, 1500);
+            //
+            //                loading = true;
+            //            }
         }
     };
 

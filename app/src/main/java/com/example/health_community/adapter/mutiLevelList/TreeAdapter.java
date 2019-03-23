@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.annotation.IntDef;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +16,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.health_community.R;
+import com.example.health_community.model.AppointMent;
+import com.example.health_community.util.Constant;
 import com.example.health_community.util.DensityUtil;
+import com.example.health_community.util.SPUtils;
 import com.example.health_community.util.TreeUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,7 +34,7 @@ import java.util.List;
  * desc:
  */
 public class TreeAdapter extends BaseAdapter {
-    private Context mcontext;
+    private Context mContext;
     private Activity mActivity;
     private List<TreePoint> pointList;
     private String keyword = "";
@@ -39,20 +44,43 @@ public class TreeAdapter extends BaseAdapter {
     //两种操作模式  点击 或者 选择
     private static final int ModeClick = 1;
     private static final int ModeSelect = 2;
+    private static int count;
+    private ViewHolder holder;
+    private String hos_name,big_depart_name,depart_name,appoint_date;
+    private int appoint_id=getRandNumber2();
+    private List<AppointMent> appointMents = new ArrayList<>();
+    private AppointMent appointMent;
 
     @IntDef({ModeClick,ModeSelect})
     public @interface Mode{
 
-    }
 
+    }
     //设置操作模式
     public void setOperateMode(@Mode int operateMode){
         this.operateMode = operateMode;
     }
 
-    public TreeAdapter(final Context mcontext, List<TreePoint> pointList, HashMap<String, TreePoint> pointMap) {
-        this.mcontext = mcontext;
-        this.mActivity = (Activity) mcontext;
+    public void setHospital(String hos_name) {
+        this.hos_name = hos_name;
+    }
+
+    public static int getRandNumber2() {
+        return (int) (Math.random() * 900000) + 100000;
+    }
+
+    public AppointMent getAppointMent() {
+        return new AppointMent(getRandNumber2(),SPUtils.getPrefString(Constant.USER_ACCOUNT,"18927512657"), hos_name, big_depart_name, depart_name, appoint_date);
+    }
+
+    public List<AppointMent> getAppointMents() {
+        return appointMents;
+    }
+
+
+    public TreeAdapter(final Context mContext, List<TreePoint> pointList, HashMap<String, TreePoint> pointMap) {
+        this.mContext = mContext;
+        this.mActivity = (Activity) mContext;
         this.pointList = pointList;
         this.pointMap = pointMap;
     }
@@ -151,9 +179,8 @@ public class TreeAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(mcontext).inflate(R.layout.adapter_treeview, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_treeview, null);
             holder = new ViewHolder();
             holder.text = (TextView) convertView.findViewById(R.id.text);
             holder.icon = (ImageView) convertView.findViewById(R.id.icon);
@@ -168,10 +195,16 @@ public class TreeAdapter extends BaseAdapter {
         if ("0".equals(tempPoint.getIS_LEAF())) {  //如果为父节点
             if (!tempPoint.isExpand()) {    //不展开显示加号
                 holder.icon.setVisibility(View.VISIBLE);
-                holder.icon.setImageResource(R.drawable.outline_list_collapse);
+//                Toast.makeText(mContext, "expand", Toast.LENGTH_SHORT).show();
+//                holder.icon.setImageResource(R.drawable.outline_list_collapse);
+                holder.icon.setImageResource(R.drawable.ic_chevron_right_blue_grey_700_24dp);
+//                ObjectAnimator.ofFloat(holder.icon, "rotation", 90, 0).start();
             } else {                        //展开显示减号
                 holder.icon.setVisibility(View.VISIBLE);
-                holder.icon.setImageResource(R.drawable.outline_list_expand);
+//                holder.icon.setImageResource(R.drawable.outline_list_expand);
+                holder.icon.setImageResource(R.drawable.ic_expand_more_blue_grey_700_24dp);
+//                Toast.makeText(mContext, "hold", Toast.LENGTH_SHORT).show();
+//                ObjectAnimator.ofFloat(holder.icon, "rotation", 0,90).start();
             }
         } else {   //如果叶子节点，不占位显示
             holder.icon.setVisibility(View.INVISIBLE);
@@ -179,10 +212,33 @@ public class TreeAdapter extends BaseAdapter {
         if(operateMode == ModeSelect){
             holder.ib_select.setVisibility(View.VISIBLE);
             holder.ib_select.setSelected(tempPoint.isSelected());
+
             holder.ib_select.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onModeSelect(tempPoint);
+//                    Toast.makeText(mContext, tempPoint.getN_NAME(), Toast.LENGTH_SHORT).show();
+                    Log.e("tempPoint", tempPoint.isSelected() + "-" + tempPoint.getN_NAME());
+                    Toast.makeText(mContext, getSubmitResult(tempPoint), Toast.LENGTH_SHORT).show();
+                    String s[] = getSubmitResult(tempPoint).split("-");
+
+                    if (tempPoint.getIS_LEAF().equals("1")) {
+                        if (tempPoint.isSelected()) {
+                            big_depart_name=s[0];
+                            depart_name=s[1];
+                            appoint_date = s[2];
+                            appointMent = new AppointMent(getRandNumber2(),SPUtils.getPrefString(Constant.USER_ACCOUNT,"18927512657"), hos_name, big_depart_name, depart_name, appoint_date);
+                            appointMents.add(appointMent);
+                            count++;
+                        } else {
+                            appointMents.remove(--count);
+                        }
+                    }
+//                    for (int i = 0; i < pointList.size(); i++) {
+//                        if (pointList.get(i).getID()==tempPoint.getPARENT_ID())
+//                            Toast.makeText(mContext, pointList.get(i).getN_NAME(), Toast.LENGTH_SHORT).show();
+//                    }
+//                    tempPoint.getPARENT_ID()
                 }
             });
         }else{
@@ -201,17 +257,16 @@ public class TreeAdapter extends BaseAdapter {
         } else {
             holder.text.setText(tempPoint.getN_NAME());
         }
-        holder.text.setCompoundDrawablePadding(DensityUtil.dip2px(mcontext, 10));
+        holder.text.setCompoundDrawablePadding(DensityUtil.dip2px(mContext, 10));
         return convertView;
     }
-
-
 
     public void onItemClick(int position) {
         TreePoint treePoint = (TreePoint) getItem(position);
         if ("1".equals(treePoint.getIS_LEAF())) {   //点击叶子节点
             //处理回填
-            Toast.makeText(mcontext, getSubmitResult(treePoint), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, getSubmitResult(treePoint), Toast.LENGTH_SHORT).show();
+            holder.ib_select.setSelected(treePoint.isSelected());
         } else {  //如果点击的是父类
             if (treePoint.isExpand()) {
                 for (TreePoint tempPoint : pointList) {
@@ -222,8 +277,10 @@ public class TreeAdapter extends BaseAdapter {
                     }
                 }
                 treePoint.setExpand(false);
+//                ObjectAnimator.ofFloat(holder.icon, "rotation", 90,0).start();
             } else {
                 treePoint.setExpand(true);
+//                ObjectAnimator.ofFloat(holder.icon, "rotation", 0,90).start();
             }
         }
         this.notifyDataSetChanged();
@@ -263,8 +320,6 @@ public class TreeAdapter extends BaseAdapter {
 //
 //        }
 //    }
-
-
 
 
     private String getSubmitResult(TreePoint treePoint) {

@@ -10,6 +10,10 @@ import java.lang.annotation.RetentionPolicy;
  * Created by zhang on 2016.09.23.
  */
 public class Constant {
+    public static final String APPOINT_NUM = "appoints";
+    public static final String APPOINT_REFRESH = "appoints_refresh";
+    public static String latitude = "23.128479";
+    public static String longitude = "113.376542";
 
     public static final String SP_KEY="com.example.databaseproject";
     public static final String BOOK_SHELF = "book_shelf";
@@ -31,6 +35,10 @@ public class Constant {
 
     public static final String THEME_MODEL = "theme_model";
     public static final String USER_GENDER = "user_gender";
+    public static final String NEARBY_HOSPITAL = "nearHospital";
+    public static final String NEWS ="news" ;
+    public static final String USER_LONGITUDE = "longtitude";
+    public static final String USER_LATITUDE = "latitude";
 
     public static String APP_URL = "https://play.google.com/store/apps/details?id=com.eajy.materialdesigndemo";
     public static String DESIGNED_BY = "Designed by Eajy in China";
@@ -119,10 +127,16 @@ public class Constant {
     public static final String _URL = "https://scau935.fashcollege.com";
     public static final String UPDATE_URL = "http://scau935.fashcollege.com/apk/";
     public static final String INFO_URL="http://scau935.fashcollege.com/getInfo.do";
-    public static final String LOGIN_URL = "http://192.168.137.1:8080/JSoupDemo/user/loginUser";
-    public static final String REGISTER_URL = "http://192.168.137.1:8080/JSoupDemo/user/registerUser";
+        public static final String LOGIN_URL = "https://www.pydwp.xyz/JSoupDemo/user/loginUser";
+    public static final String REGISTER_URL = "https://www.pydwp.xyz/JSoupDemo/user/registerUser";
+//    public static final String LOGIN_URL = "http://192.168.137.1:8080/JSoupDemo/user/loginUser";
+//    public static final String REGISTER_URL = "http://192.168.137.1:8080/JSoupDemo/user/registerUser";
     public static final String IDENTIFY_URL="http://40.125.207.182:8080/identify.do";
+    public static final String INSERT_APPOINTS_URL = "https://www.pydwp.xyz/JSoupDemo/appoint/insertAppoints.do";
+    public static final String DELETE_APPOINTS_URL ="https://www.pydwp.xyz/JSoupDemo/appoint/deleteAppoint.do" ;
     public static final String CHECK_UPDATE_URL = "http://40.125.207.182:8080/getFileName.do";
+    public static final String VALICOE_URL = "https://pydwp.xyz/JSoupDemo/user/valicode.do?";
+//    public static final String VALICOE_URL = "http://192.168.137.1:8080/JSoupDemo/user/valicode.do?";
     public static String GET_NEWS_URL = "https://pydwp.xyz/JSoupDemo/News/getJsonNews.do?news_type=";
     public static String SEARCH_MEDICINE_URL = "https://pydwp.xyz/JSoupDemo/medicine/getJsonMedicines.do?searchContent=";
 

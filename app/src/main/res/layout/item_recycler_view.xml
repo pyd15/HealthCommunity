@@ -20,7 +20,7 @@
         android:padding="15dp">
 
         <ImageView
-            android:id="@+id/rela_round"
+            android:id="@+id/news_img"
             android:layout_width="150dp"
             android:layout_height="100dp"
             android:layout_marginRight="@dimen/text_margin"
@@ -29,22 +29,31 @@
         <!--android:transitionName="shareView"-->
 
         <TextView
-            android:id="@+id/tv_recycler_item_1"
+            android:id="@+id/news_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/rela_round"
+            android:layout_toRightOf="@id/news_img"
             android:text="@string/tv_recycler_item_1"
-            android:textColor="@color/black"/>
+            android:textSize="17sp"
+            android:textColor="@color/black"
+            android:layout_toEndOf="@id/news_img"
+            android:layout_marginStart="5dp"/>
 
         <TextView
-            android:id="@+id/tv_recycler_item_2"
+            android:id="@+id/news_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_recycler_item_1"
+            android:layout_below="@id/news_title"
             android:layout_marginTop="@dimen/text_margin_very_small"
-            android:layout_toRightOf="@id/rela_round"
-            android:text="@string/tv_recycler_item_2"/>
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/news_img"
+            android:text="@string/tv_recycler_item_2"
+            android:gravity="right|bottom"
+            android:layout_marginStart="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@id/news_img"
+            android:layout_toEndOf="@id/news_img"/>
 
         <!--  <TextView
             android:id="@+id/tv_recycler_item_3"

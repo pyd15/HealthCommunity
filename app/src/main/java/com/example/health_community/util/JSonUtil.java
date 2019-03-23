@@ -100,6 +100,8 @@ public class JSonUtil {
         return new Gson().toJson(map);
     }
 
-
+    public static String listToJsonGson(List list) {
+        return new Gson().toJson(list);
+    }
 
 }

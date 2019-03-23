@@ -5,11 +5,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +28,12 @@ import com.example.health_community.activity.LoginActivity;
 import com.example.health_community.activity.PoiSearchActivity;
 import com.example.health_community.activity.SearchMedicineActivity;
 import com.example.health_community.activity.SelfAppointmentActivity;
+import com.example.health_community.adapter.HospitalAdapter;
+import com.example.health_community.model.Hospital;
+
+import org.litepal.LitePal;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,8 +63,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     Button btn_service_comment;
     @BindView(R.id.diagnose_record)
     Button btn_diagnose_record;
+    @BindView(R.id.recycler_view_recycler_view)
+    RecyclerView recyclerView;
+    @BindView(R.id.swipe_refresh_layout_recycler_view)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     private View view;
+
     //    @BindView(R.id.view_pager_main)
     private ViewPager mVpContent;
     //    @BindView(R.id.tab_layout_main)
@@ -59,8 +77,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     BottomNavigationBarActivity bottomNavigationActivity;
     private Intent intent;
 
-    //    private List<Book> allBooks;
-    //    List<Book> filteredModelList;
+    private List<Hospital> hospitals;
+    private HospitalAdapter adapter;
+    private boolean loading;
+    private int count;
+    private int loadTimes;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -87,11 +108,58 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         setHasOptionsMenu(true);
         //        allBooks = LitePal.findAll(Book.class);
+                initData();
         initView();
         return view;
     }
 
+    public void initData() {
+        //        hospitals = new Gson().fromJson(SPUtils.getPrefString(Constant.NEARBY_HOSPITAL,"null"), new TypeToken<List<Hospital>>() {
+        //                    }.getType());
+        //        for (Hospital hospital : hospitals) {
+        //            Log.e("hosptial", hospital.toString());
+        //        }
+        hospitals = LitePal.findAll(Hospital.class);
+
+    }
+
     public void initView() {
+        if (getScreenWidthDp() >= 1200) {
+            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3);
+            recyclerView.setLayoutManager(gridLayoutManager);
+        } else if (getScreenWidthDp() >= 800) {
+            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+            recyclerView.setLayoutManager(gridLayoutManager);
+        } else {
+            final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+            recyclerView.setLayoutManager(linearLayoutManager);
+        }
+
+        adapter = new HospitalAdapter(getActivity());
+        adapter.setItems(hospitals);
+        adapter.addFooter();
+        recyclerView.setAdapter(adapter);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout_recycler_view);
+        swipeRefreshLayout.setColorSchemeResources(R.color.google_blue, R.color.google_green, R.color.google_red, R.color.google_yellow);
+        swipeRefreshLayout.setOnRefreshListener(() -> new Handler().postDelayed(() -> {
+            //            try {
+            //                HttpAction.parseJSONWithJSONObject(context, Constant.GET_NEWS_URL + category, category);
+            //            } catch (JSONException e) {
+            //                e.printStackTrace();
+            //            }
+            //            news = new Gson().fromJson(SPUtils.getPrefString(category, null), new TypeToken<List<News>>() {
+            //            }.getType());
+            adapter.clearItems();
+            loading = false;
+            //            String strJson = SPUtils.getPrefString("news", null);
+            //            news=new Gson().fromJson(strJson, new TypeToken<List<News>>() {}.getType());
+            adapter.addItems(hospitals);
+            adapter.addFooter();
+            adapter.notifyDataSetChanged();
+            swipeRefreshLayout.setRefreshing(false);
+        }, 2000));
+
+        recyclerView.addOnScrollListener(scrollListener);
         //        initSearchView();
         //        MainTabAdapter adapter = new MainTabAdapter(bottomNavigationActivity.getSupportFragmentManager());
         //        mVpContent =  view.findViewById(R.id.view_pager_info);
@@ -119,7 +187,44 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         //            }
         //        });
         //        tabLayout.setSmoothScrollingEnabled(true);
+
     }
+
+    RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+
+            final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+            count = linearLayoutManager.getItemCount();
+            if (!loading && linearLayoutManager.getItemCount() == (linearLayoutManager.findLastVisibleItemPosition() + 1)) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (loadTimes <= 2) {
+                            adapter.removeFooter();
+                            loading = false;
+                            adapter.addItems(hospitals);
+                            adapter.addFooter();
+                            loadTimes++;
+                        } else {
+                            adapter.removeFooter();
+                            Snackbar.make(recyclerView, getString(R.string.no_more_data), Snackbar.LENGTH_SHORT).setCallback(new Snackbar.Callback() {
+                                @Override
+                                public void onDismissed(Snackbar transientBottomBar, int event) {
+                                    super.onDismissed(transientBottomBar, event);
+                                    loading = false;
+                                    adapter.addFooter();
+                                }
+                            }).show();
+                        }
+                    }
+                }, 1500);
+
+                loading = true;
+            }
+        }
+    };
 
     @Override
     public void onClick(View view) {
@@ -241,6 +346,24 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         if (activity instanceof BottomNavigationBarActivity) {
             bottomNavigationActivity = (BottomNavigationBarActivity) activity;
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        hospitals.clear();
+        initData();
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    private int getScreenWidthDp() {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        return (int) (displayMetrics.widthPixels / displayMetrics.density);
     }
     //
     //    @Override

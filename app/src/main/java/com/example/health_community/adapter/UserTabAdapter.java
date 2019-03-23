@@ -33,27 +33,27 @@ public class UserTabAdapter extends FragmentStatePagerAdapter {
         if (0 == position) {
             //            fragment = new RecycleViewFragment();
             fragment = new RecycleViewFragment();
-            fragment.setCategory("文学");
+            fragment.setCategory("39_ys");
             fragment.setContext(context);
         } else if (1 == position) {
             //            fragment = new CardsFragment();
             fragment = new RecycleViewFragment();
-            fragment.setCategory("教育");
+            fragment.setCategory("39_xinzhi");
             fragment.setContext(context);
         } else if (2 == position) {
             //            fragment = new CardsFragment();
             fragment = new RecycleViewFragment();
-            fragment.setCategory("艺术");
+            fragment.setCategory("xinzhi");
             fragment.setContext(context);
         } else if (3 == position) {
             //            fragment = new CardsFragment();
             fragment = new RecycleViewFragment();
-            fragment.setCategory("政治");
+            fragment.setCategory("39_xlbk");
             fragment.setContext(context);
         } else if (4 == position) {
             //            fragment = new CardsFragment();
             fragment = new RecycleViewFragment();
-            fragment.setCategory("科学");
+            fragment.setCategory("keyan");
             fragment.setContext(context);
         } else if (5 == position) {
             //            fragment = new CardsFragment();

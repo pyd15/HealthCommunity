@@ -3,7 +3,7 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/backup"
-        android:icon="@drawable/geo"
+        android:icon="@drawable/nav_location"
         android:title="Backup"
         app:showAsAction="always"/>
 

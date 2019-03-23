@@ -127,12 +127,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         type = "login";
         circleProgressDialog = new CircleProgressDialog(this);
         //可对对话框的大小、进度条的颜色、宽度、文字的颜色、内容等属性进行设置
-        circleProgressDialog.setDialogSize(15);
+        circleProgressDialog.setDialogSize(25);
+        circleProgressDialog.setProgressColor(getResources().getColor(R.color.colorAccent));
         circleProgressDialog.setProgressColor(Color.BLUE);
         circleProgressDialog.setText("loading...");
         input_user_account.setFocusable(true);
-        mUserAccountACTView.setFocusable(true);
-        mUserAccountACTView.setFocusableInTouchMode(true);
+//        mUserAccountACTView.setFocusable(true);
+//        mUserAccountACTView.setFocusableInTouchMode(true);
     }
 
     private void showCircleProgressDialog(boolean show) {
@@ -150,10 +151,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.btn_login:
                 attemptLogin(type);
-                Toast.makeText(this, "sdafasd", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "sdafasd", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.verify_code:
-                Glide.with(this).load("http://192.168.137.1:8080/JSoupDemo/user/valicode.do?" + new Date().getTime()).into(verifyCode);
+//                Glide.with(this).load("http://192.168.137.1:8080/JSoupDemo/user/valicode.do?" + new Date().getTime()).into(verifyCode);
+                Glide.with(this).load(Constant.VALICOE_URL + new Date().getTime()).into(verifyCode);
                 break;
             case R.id.btn_forgot_password:
                 Snackbar.make(v, getString(R.string.snackbar_forgot_password), Snackbar.LENGTH_LONG)
@@ -180,7 +182,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mPasswordView.setImeOptions(EditorInfo.IME_ACTION_GO);
         linearLayout.setVisibility(View.VISIBLE);
         input_user_name.setVisibility(View.VISIBLE);
-        Glide.with(this).load("http://192.168.137.1:8080/JSoupDemo/user/valicode.do?" + new Date().getTime()).into(verifyCode);
+//        192.168.137.1:8080
+//        Glide.with(this).load("http://192.168.137.1:8080/JSoupDemo/user/valicode.do?" + new Date().getTime()).into(verifyCode);
+        Glide.with(this).load("https://pydwp.xyz/JSoupDemo/user/valicode.do?" + new Date().getTime()).into(verifyCode);
         login_button.setText("注册");
         register.setText("登录");
 //        attemptLogin(type);
@@ -254,12 +258,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } else {
             hideInput(login_button);
 //            showProgress(true);
-            showCircleProgressDialog(true);
+//            showCircleProgressDialog(true);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showCircleProgressDialog(false);
+                }
+            });
             if (type.equals("login")) {
-                mAuthLoginTask = new UserLoginTask(NormalUtil.getRandomString(16), userAccount, userAccount, password, type, formatter.format(new Date()));
+                mAuthLoginTask = new UserLoginTask(NormalUtil.getRandomString(16), userAccount, userName, password, type, formatter.format(new Date()));
                 mAuthLoginTask.execute((Void) null);
             } else {
-                mAuthRegisterTask = new UserRegisterTask(NormalUtil.getRandomString(16), userAccount, userAccount, password, type, formatter.format(new Date()));
+                mAuthRegisterTask = new UserRegisterTask(NormalUtil.getRandomString(16), userAccount, userName, password, type, formatter.format(new Date()));
                 mAuthRegisterTask.execute((Void) null);
             }
         }
@@ -329,7 +339,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
             // TODO: register the new account here.
-                user = new User(mUserId, mUserAccount, mUserName, mUserPassword, mRegisterTime);
+                user = new User(mUserId,  mUserName,mUserAccount,  mUserPassword, mRegisterTime);
                 Map<String, Object> map = new HashMap<>();
                 map.put("user", user);
                 //                map.put("user_name", mUserName);
@@ -337,7 +347,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String json = JSonUtil.mapToJsonGson(map);
                 Log.e("login", json);
                 //                HttpUtil.sendOkHttpPostRequest(Constant.LOGIN_URL, json, new Callback() {
-                HttpUtil.sendOkHttpPostRequest(Constant.LOGIN_URL + "?user_account=" + mUserName + "&user_pass=" + mUserPassword, json, new Callback() {
+                HttpUtil.sendOkHttpPostRequest(Constant.LOGIN_URL + "?user_account=" + mUserAccount + "&user_pass=" + mUserPassword, json, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         Log.e("login_response", "登录失败!");
@@ -345,6 +355,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             @Override
                             public void run() {
                                 Toast.makeText(LoginActivity.this, "登录失败!", Toast.LENGTH_SHORT).show();
+                                SPUtils.setPrefBoolean(Constant.LOGIN_SUCCESS, false);
                             }
                             });
                     }
@@ -352,33 +363,43 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         responseString = response.body().string();
-                        Log.e("register_response", responseString);
+                        Log.e("login_response", responseString);
                         LoginActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 if (responseString.contains("成功")) {
                                     Toast.makeText(LoginActivity.this, responseString, Toast.LENGTH_SHORT).show();
-                                    setUserInSP();
+                                    setUserInSP(true);
                                     success = true;
-                                    finish();
+//                                    finish();
                                 } else if (responseString.contains("不存在")) {
                                     Toast.makeText(LoginActivity.this, responseString, Toast.LENGTH_SHORT).show();
+                                    SPUtils.setPrefBoolean(Constant.LOGIN_SUCCESS, false);
                                     i=1;
+                                    success = false;
                                 } else {
                                     Toast.makeText(LoginActivity.this, responseString, Toast.LENGTH_SHORT).show();
                                     i=2;
+                                    SPUtils.setPrefBoolean(Constant.LOGIN_SUCCESS, false);
+                                    success = false;
                                 }
                             }
                         });
                     }
                 });
-            if (success)
-                return true;
-            else
+//            success = SPUtils.getPrefBoolean(Constant.LOGIN_SUCCESS, false);
+//                return SPUtils.getPrefBoolean(Constant.LOGIN_SUCCESS, false);
+            Log.e("success", success + "");
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
                 return false;
+            }
+            return success;
         }
 
-        private void setUserInSP() {
+        private void setUserInSP(boolean s) {
+            success = s;
             SPUtils.setPrefBoolean(Constant.LOGIN_SUCCESS, true);
             SPUtils.setPrefString(Constant.USER_NAME, mUserName);
             SPUtils.setPrefString(Constant.USER_ACCOUNT, mUserAccount);
@@ -390,10 +411,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         protected void onPostExecute(final Boolean success) {
             mAuthLoginTask = null;
 //            showProgress(false);
-            if (success) {
+            if (SPUtils.getPrefBoolean(Constant.LOGIN_SUCCESS, false)) {
                 finish();
             } else {
-                showCircleProgressDialog(false);
+//                showCircleProgressDialog(false);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showCircleProgressDialog(false);
+                    }
+                });
                 switch (i) {
                     case 1:
                         input_user_account.setError(responseString);
@@ -437,16 +464,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             // TODO: attempt authentication against a network service.
             // TODO: register the new account here.
 
-                user = new User(mUserId, mUserAccount, mUserName, mUserPassword, mRegisterTime);
+                user = new User(mUserId, mUserName, mUserAccount, mUserPassword, mRegisterTime);
                 Map<String, Object> map = new HashMap<>();
                 map.put("user", user);
                 map.put("verify", verify);
                 String json = JSonUtil.mapToJsonGson(map);
                 Log.e("register", json);
                 HttpUtil.sendOkHttpPostRequest(Constant.REGISTER_URL, json, new Callback() {
+                    boolean success;
                     @Override
                     public void onFailure(Call call, IOException e) {
                         Log.e("register_response", "fail!");
+                        SPUtils.setPrefBoolean(Constant.LOGIN_SUCCESS, false);
                     }
 
                     @Override
@@ -459,26 +488,38 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 if (responseString.contains("成功")) {
                                     Toast.makeText(LoginActivity.this, responseString, Toast.LENGTH_SHORT).show();
                                     success = true;
-                                    setUserInSP();
+                                    setUserInSP(true);
                                     finish();
                                 } else if (responseString.contains("已存在")) {
                                     Toast.makeText(LoginActivity.this, responseString, Toast.LENGTH_SHORT).show();
                                     i=1;
+                                    SPUtils.setPrefBoolean(Constant.LOGIN_SUCCESS, false);
+                                    success = false;
                                 } else {
                                     Toast.makeText(LoginActivity.this, responseString, Toast.LENGTH_SHORT).show();
                                     i=2;
+                                    SPUtils.setPrefBoolean(Constant.LOGIN_SUCCESS, false);
+                                    success = false;
                                 }
                             }
                         });
                     }
                 });
-            if (success)
-                return true;
-            else
+//            if (success)
+//                return true;
+//            else
+//                return false;
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
                 return false;
+            }
+            return success;
+//            return SPUtils.getPrefBoolean(Constant.LOGIN_SUCCESS, false);
         }
 
-        private void setUserInSP() {
+        private void setUserInSP(boolean s) {
+            success = s;
             SPUtils.setPrefBoolean(Constant.LOGIN_SUCCESS, true);
             SPUtils.setPrefString(Constant.USER_NAME, mUserName);
             SPUtils.setPrefString(Constant.USER_ACCOUNT, mUserAccount);
@@ -491,10 +532,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             mAuthLoginTask = null;
 //            showProgress(false);
 
-            if (success) {
+//            if (success) {
+            if (SPUtils.getPrefBoolean(Constant.LOGIN_SUCCESS, false)) {
                 finish();
             } else {
-                showCircleProgressDialog(false);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showCircleProgressDialog(false);
+                    }
+                });
+
                 switch (i) {
                     case 1:
                         input_user_account.setError(responseString);

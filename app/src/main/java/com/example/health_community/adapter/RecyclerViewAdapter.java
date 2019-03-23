@@ -30,6 +30,9 @@ import com.example.health_community.activity.WebNewsActivity;
 import com.example.health_community.view.interf.onMoveAndSwipedListener;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -157,6 +160,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             ((Activity) context, recyclerViewHolder.rela_round, "shareView").toBundle());
                 }
             });
+            recyclerViewHolder.mView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    return false;
+                }
+            });
         }
     }
 
@@ -246,8 +255,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private class RecyclerViewHolder extends RecyclerView.ViewHolder {
         private View mView;
-        //        private ImageView rela_round;
-        //        @BindView(R.id.rela_round)
+        //        private ImageView hos_img;
+        //        @BindView(R.id.hos_img)
         ImageView rela_round;
         //        @BindView(R.id.tv_recycler_item_1)
         TextView news_title;
@@ -257,9 +266,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private RecyclerViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
-            rela_round = itemView.findViewById(R.id.rela_round);
-            news_title = itemView.findViewById(R.id.tv_recycler_item_1);
-            news_desc = itemView.findViewById(R.id.tv_recycler_item_2);
+            rela_round = itemView.findViewById(R.id.news_img);
+            news_title = itemView.findViewById(R.id.news_title);
+            news_desc = itemView.findViewById(R.id.news_desc);
             //            ButterKnife.bind(this, itemView);
         }
 
@@ -273,7 +282,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 //                    .dontTransform();
             Glide.with(context).load(news.getNews_image()).apply(options).into(rela_round);
             String desc=news.getNews_desc().substring(0, (int) (news.getNews_desc().length()*0.8))+"...";
-            news_desc.setText(desc);
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date sqlDate = null;
+            try {
+                sqlDate = new Date(formatter.parse(news.getNews_date()).getTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            news_desc.setText(sqlDate.toString());
         }
     }
 

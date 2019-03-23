@@ -76,8 +76,8 @@ public class NormalUtil {
                 }).show();
     }
 
-    public static void showExitDialog(Context context) {
-        new android.support.v7.app.AlertDialog.Builder(context).setTitle("确认退出吗？")
+    public static void showExitDialog(Context context,String title) {
+        new android.support.v7.app.AlertDialog.Builder(context).setTitle(title)
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
                     @Override
